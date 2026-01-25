@@ -1663,3 +1663,663 @@
             </div>
         </div>
     <script>
+
+    // ========================================
+        // UTILITY FUNCTIONS
+        // ========================================
+        
+        function getOrgKey(key) {
+            const orgId = localStorage.getItem('currentOrganization');
+            return key + '_' + orgId;
+        }
+
+        function getCurrentUserData() {
+            const currentUserEmail = localStorage.getItem('currentUser');
+            const users = JSON.parse(localStorage.getItem('studioFlowUsers') || '{}');
+            return users[currentUserEmail] || null;
+        }
+
+        function isOwner() {
+            const currentUserEmail = localStorage.getItem('currentUser');
+            const settings = JSON.parse(localStorage.getItem(getOrgKey('settings')) || '{}');
+            
+            if (!settings.owners) {
+                const userData = getCurrentUserData();
+                if (userData) {
+                    settings.owners = [currentUserEmail];
+                    localStorage.setItem(getOrgKey('settings'), JSON.stringify(settings));
+                    return true;
+                }
+                return false;
+            }
+            
+            return settings.owners.includes(currentUserEmail);
+        }
+
+        // ========================================
+        // DATA STORAGE
+        // ========================================
+        
+        let clients = [];
+        let sessions = [];
+        let teachers = [];
+        let invoices = [];
+
+        function loadData() {
+            clients = JSON.parse(localStorage.getItem(getOrgKey('clients')) || '[]');
+            sessions = JSON.parse(localStorage.getItem(getOrgKey('sessions')) || '[]');
+            teachers = JSON.parse(localStorage.getItem(getOrgKey('teachers')) || '[]');
+            invoices = JSON.parse(localStorage.getItem(getOrgKey('invoices')) || '[]');
+            
+            renderClients();
+            renderTeachers();
+            renderSessions();
+            renderInvoices();
+        }
+
+        function saveData() {
+            localStorage.setItem(getOrgKey('clients'), JSON.stringify(clients));
+            localStorage.setItem(getOrgKey('sessions'), JSON.stringify(sessions));
+            localStorage.setItem(getOrgKey('teachers'), JSON.stringify(teachers));
+            localStorage.setItem(getOrgKey('invoices'), JSON.stringify(invoices));
+        }
+
+        // ========================================
+        // TAB SWITCHING
+        // ========================================
+        
+        function switchTab(tabName, event) {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            
+            if (event && event.target) {
+                event.target.classList.add('active');
+            }
+            
+            document.getElementById(tabName + '-tab').classList.add('active');
+            
+            if (tabName === 'settings') {
+                loadSettings();
+            }
+        }
+
+        // ========================================
+        // LOGOUT
+        // ========================================
+        
+        function logout() {
+            if (confirm('Are you sure you want to logout?')) {
+                localStorage.removeItem('currentUser');
+                localStorage.removeItem('currentOrganization');
+                window.location.href = 'login.html';
+            }
+        }
+
+        // ========================================
+        // CLIENT MANAGEMENT
+        // ========================================
+        
+        function renderClients() {
+            const container = document.getElementById('clientsList');
+            if (!container) return;
+            
+            if (clients.length === 0) {
+                container.innerHTML = '<p>No clients yet. Add your first client above.</p>';
+                return;
+            }
+            
+            container.innerHTML = clients.map((client, index) => `
+                <div style="padding: 15px; background: var(--bg); border-radius: 8px; margin-bottom: 10px;">
+                    <strong>${client.name}</strong><br>
+                    Email: ${client.email || 'N/A'}<br>
+                    Phone: ${client.phone || 'N/A'}
+                    <div style="margin-top: 10px;">
+                        <button class="btn-secondary" onclick="editClient(${index})" style="margin-right: 5px;">Edit</button>
+                        <button class="btn-secondary" onclick="deleteClient(${index})">Delete</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function addClient(event) {
+            event.preventDefault();
+            
+            const name = document.getElementById('clientName').value.trim();
+            const email = document.getElementById('clientEmail').value.trim();
+            const phone = document.getElementById('clientPhone').value.trim();
+            
+            if (!name) {
+                alert('Please enter a client name');
+                return;
+            }
+            
+            const client = {
+                id: Date.now(),
+                name: name,
+                email: email,
+                phone: phone,
+                createdAt: new Date().toISOString()
+            };
+            
+            clients.push(client);
+            saveData();
+            renderClients();
+            
+            document.getElementById('clientForm').reset();
+            alert('Client added successfully!');
+        }
+
+        function editClient(index) {
+            const client = clients[index];
+            const newName = prompt('Edit name:', client.name);
+            if (newName && newName.trim()) {
+                clients[index].name = newName.trim();
+                saveData();
+                renderClients();
+            }
+        }
+
+        function deleteClient(index) {
+            if (confirm('Delete this client?')) {
+                clients.splice(index, 1);
+                saveData();
+                renderClients();
+            }
+        }
+
+        // ========================================
+        // TEACHER MANAGEMENT
+        // ========================================
+        
+        function renderTeachers() {
+            const container = document.getElementById('teachersList');
+            if (!container) return;
+            
+            if (teachers.length === 0) {
+                container.innerHTML = '<p>No teachers yet. Add your first teacher above.</p>';
+                return;
+            }
+            
+            container.innerHTML = teachers.map((teacher, index) => `
+                <div style="padding: 15px; background: var(--bg); border-radius: 8px; margin-bottom: 10px;">
+                    <strong>${teacher.name}</strong><br>
+                    ${teacher.email || 'No email'}<br>
+                    Status: ${teacher.active !== false ? 'Active' : 'Inactive'}
+                    <div style="margin-top: 10px;">
+                        <button class="btn-secondary" onclick="editTeacher(${index})" style="margin-right: 5px;">Edit</button>
+                        <button class="btn-secondary" onclick="deleteTeacher(${index})">Delete</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function addTeacher(event) {
+            event.preventDefault();
+            
+            const name = document.getElementById('teacherName').value.trim();
+            const email = document.getElementById('teacherEmail').value.trim();
+            
+            if (!name) {
+                alert('Please enter a teacher name');
+                return;
+            }
+            
+            const teacher = {
+                id: Date.now(),
+                name: name,
+                email: email,
+                active: true,
+                createdAt: new Date().toISOString()
+            };
+            
+            teachers.push(teacher);
+            saveData();
+            renderTeachers();
+            
+            document.getElementById('teacherForm').reset();
+            alert('Teacher added successfully!');
+        }
+
+        function editTeacher(index) {
+            const teacher = teachers[index];
+            const newName = prompt('Edit name:', teacher.name);
+            if (newName && newName.trim()) {
+                teachers[index].name = newName.trim();
+                saveData();
+                renderTeachers();
+            }
+        }
+
+        function deleteTeacher(index) {
+            if (confirm('Delete this teacher?')) {
+                teachers.splice(index, 1);
+                saveData();
+                renderTeachers();
+            }
+        }
+
+        // ========================================
+        // SESSION MANAGEMENT
+        // ========================================
+        
+        function renderSessions() {
+            const container = document.getElementById('sessionsList');
+            if (!container) return;
+            
+            if (sessions.length === 0) {
+                container.innerHTML = '<p>No sessions booked yet.</p>';
+                return;
+            }
+            
+            const sorted = [...sessions].sort((a, b) => new Date(b.date) - new Date(a.date));
+            
+            container.innerHTML = sorted.map((session, index) => `
+                <div style="padding: 15px; background: var(--bg); border-radius: 8px; margin-bottom: 10px;">
+                    <strong>${session.type || 'Session'}</strong><br>
+                    Date: ${new Date(session.date).toLocaleDateString()}<br>
+                    Teacher: ${session.teacherName || 'N/A'}<br>
+                    Clients: ${session.clientNames || 'N/A'}
+                    <div style="margin-top: 10px;">
+                        <button class="btn-secondary" onclick="deleteSession(${sessions.indexOf(session)})">Delete</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function addSession(event) {
+            event.preventDefault();
+            
+            const type = document.getElementById('sessionType').value;
+            const date = document.getElementById('sessionDate').value;
+            const teacher = document.getElementById('sessionTeacher').value;
+            
+            if (!type || !date) {
+                alert('Please fill in all required fields');
+                return;
+            }
+            
+            const session = {
+                id: Date.now(),
+                type: type,
+                date: date,
+                teacherName: teacher,
+                clientNames: 'Client(s)',
+                createdAt: new Date().toISOString()
+            };
+            
+            sessions.push(session);
+            saveData();
+            renderSessions();
+            
+            document.getElementById('sessionForm').reset();
+            alert('Session booked successfully!');
+        }
+
+        function deleteSession(index) {
+            if (confirm('Delete this session?')) {
+                sessions.splice(index, 1);
+                saveData();
+                renderSessions();
+            }
+        }
+
+        // ========================================
+        // INVOICE MANAGEMENT
+        // ========================================
+        
+        function renderInvoices() {
+            const container = document.getElementById('invoicesList');
+            if (!container) return;
+            
+            if (invoices.length === 0) {
+                container.innerHTML = '<p>No invoices yet.</p>';
+                return;
+            }
+            
+            container.innerHTML = invoices.map((invoice, index) => `
+                <div style="padding: 15px; background: var(--bg); border-radius: 8px; margin-bottom: 10px;">
+                    <strong>Invoice #${invoice.id}</strong><br>
+                    Amount: $${invoice.amount}<br>
+                    Status: ${invoice.status || 'unpaid'}<br>
+                    Date: ${new Date(invoice.date).toLocaleDateString()}
+                    <div style="margin-top: 10px;">
+                        <button class="btn-secondary" onclick="toggleInvoiceStatus(${index})">
+                            Mark as ${invoice.status === 'paid' ? 'Unpaid' : 'Paid'}
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function generateInvoice() {
+            const amount = prompt('Enter invoice amount:');
+            if (!amount || isNaN(amount)) {
+                alert('Invalid amount');
+                return;
+            }
+            
+            const invoice = {
+                id: Date.now(),
+                amount: parseFloat(amount),
+                status: 'unpaid',
+                date: new Date().toISOString()
+            };
+            
+            invoices.push(invoice);
+            saveData();
+            renderInvoices();
+            alert('Invoice created!');
+        }
+
+        function toggleInvoiceStatus(index) {
+            invoices[index].status = invoices[index].status === 'paid' ? 'unpaid' : 'paid';
+            saveData();
+            renderInvoices();
+        }
+
+        // ========================================
+        // SETTINGS FUNCTIONS
+        // ========================================
+        
+        function loadSettings() {
+            if (!isOwner()) {
+                document.getElementById('settingsTab').style.display = 'none';
+                switchTab('clients', event);
+                alert('You do not have permission to access Settings.');
+                return;
+            }
+            
+            const settings = JSON.parse(localStorage.getItem(getOrgKey('settings')) || '{}');
+            const userData = getCurrentUserData();
+            
+            if (userData) {
+                const nameInput = document.getElementById('studioNameSetting');
+                if (nameInput) {
+                    nameInput.value = userData.studioName || '';
+                }
+                document.getElementById('mainStudioName').textContent = userData.studioName || 'Studio Flow';
+            }
+            
+            if (settings.logo) {
+                updateLogoDisplay(settings.logo);
+            } else {
+                updateLogoDisplay(null);
+            }
+            
+            renderOwnersList();
+            renderTeachersList();
+            renderClassPricing();
+        }
+
+        function saveBusinessInfo() {
+            const studioName = document.getElementById('studioNameSetting').value.trim();
+            
+            if (!studioName) {
+                alert('Please enter a business name');
+                return;
+            }
+            
+            const users = JSON.parse(localStorage.getItem('studioFlowUsers') || '{}');
+            const currentUser = localStorage.getItem('currentUser');
+            if (users[currentUser]) {
+                users[currentUser].studioName = studioName;
+                localStorage.setItem('studioFlowUsers', JSON.stringify(users));
+            }
+            
+            const settings = JSON.parse(localStorage.getItem(getOrgKey('settings')) || '{}');
+            settings.studioName = studioName;
+            localStorage.setItem(getOrgKey('settings'), JSON.stringify(settings));
+            
+            document.getElementById('mainStudioName').textContent = studioName;
+            
+            alert('Business information saved successfully!');
+        }
+
+        function handleLogoUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            if (file.size > 500000) {
+                alert('File size must be less than 500KB');
+                return;
+            }
+            
+            if (!file.type.startsWith('image/')) {
+                alert('Please upload an image file');
+                return;
+            }
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const imageData = e.target.result;
+                const settings = JSON.parse(localStorage.getItem(getOrgKey('settings')) || '{}');
+                settings.logo = imageData;
+                localStorage.setItem(getOrgKey('settings'), JSON.stringify(settings));
+                updateLogoDisplay(imageData);
+                alert('Logo uploaded successfully!');
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function removeLogo() {
+            if (!confirm('Remove your business logo?')) return;
+            
+            const settings = JSON.parse(localStorage.getItem(getOrgKey('settings')) || '{}');
+            delete settings.logo;
+            localStorage.setItem(getOrgKey('settings'), JSON.stringify(settings));
+            updateLogoDisplay(null);
+            alert('Logo removed successfully!');
+        }
+
+        function updateLogoDisplay(imageData) {
+            const logoPreview = document.getElementById('logoPreview');
+            const mainLogo = document.getElementById('mainLogo');
+            const userData = getCurrentUserData();
+            const studioName = userData ? userData.studioName : 'Studio Flow';
+            const initials = studioName.split(' ').map(word => word[0]).join('').substring(0, 2).toUpperCase();
+            
+            if (imageData) {
+                if (logoPreview) logoPreview.innerHTML = '<img src="' + imageData + '" alt="Logo" style="width:100%;height:100%;object-fit:cover;">';
+                if (mainLogo) mainLogo.innerHTML = '<img src="' + imageData + '" alt="Logo" style="width:100%;height:100%;object-fit:cover;">';
+            } else {
+                if (logoPreview) logoPreview.innerHTML = '<span style="font-size:36px;color:var(--primary);">' + initials + '</span>';
+                if (mainLogo) mainLogo.innerHTML = initials;
+            }
+        }
+
+        function renderOwnersList() {
+            const container = document.getElementById('ownersList');
+            if (!container) return;
+            
+            const settings = JSON.parse(localStorage.getItem(getOrgKey('settings')) || '{}');
+            const currentUserEmail = localStorage.getItem('currentUser');
+            
+            if (!settings.owners || settings.owners.length === 0) {
+                settings.owners = [currentUserEmail];
+                localStorage.setItem(getOrgKey('settings'), JSON.stringify(settings));
+            }
+            
+            container.innerHTML = '<p><strong>Owners:</strong> ' + settings.owners.join(', ') + '</p>';
+        }
+
+        function addOwner() {
+            const email = document.getElementById('newOwnerEmail').value.trim().toLowerCase();
+            
+            if (!email) {
+                alert('Please enter an email address');
+                return;
+            }
+            
+            const users = JSON.parse(localStorage.getItem('studioFlowUsers') || '{}');
+            
+            if (!users[email]) {
+                alert('This user does not have an account.');
+                return;
+            }
+            
+            const currentOrgId = localStorage.getItem('currentOrganization');
+            if (users[email].organizationId !== currentOrgId) {
+                alert('This user belongs to a different organization.');
+                return;
+            }
+            
+            const settings = JSON.parse(localStorage.getItem(getOrgKey('settings')) || '{}');
+            if (!settings.owners) settings.owners = [];
+            
+            if (settings.owners.includes(email)) {
+                alert('This user is already an owner');
+                return;
+            }
+            
+            settings.owners.push(email);
+            localStorage.setItem(getOrgKey('settings'), JSON.stringify(settings));
+            
+            document.getElementById('newOwnerEmail').value = '';
+            renderOwnersList();
+            alert('Owner added successfully!');
+        }
+
+        function renderTeachersList() {
+            const container = document.getElementById('teachersList');
+            if (!container) return;
+            
+            if (teachers.length === 0) {
+                container.innerHTML = '<p>No teachers added yet.</p>';
+                return;
+            }
+            
+            container.innerHTML = teachers.map((teacher, index) => {
+                const isActive = teacher.active !== false;
+                return '<div style="padding:10px;background:var(--bg);border-radius:8px;margin-bottom:10px;">' +
+                    '<strong>' + teacher.name + '</strong> - ' +
+                    (isActive ? 'Active' : 'Inactive') +
+                    ' <button class="btn-secondary" onclick="toggleTeacherStatus(' + index + ')" style="margin-left:10px;">' +
+                    (isActive ? 'Deactivate' : 'Activate') +
+                    '</button></div>';
+            }).join('');
+        }
+
+        function toggleTeacherStatus(index) {
+            const teacher = teachers[index];
+            teacher.active = teacher.active === false;
+            saveData();
+            renderTeachersList();
+            alert(teacher.name + ' has been ' + (teacher.active ? 'activated' : 'deactivated'));
+        }
+
+        function renderClassPricing() {
+            const container = document.getElementById('classPricingList');
+            if (!container) return;
+            
+            const settings = JSON.parse(localStorage.getItem(getOrgKey('settings')) || '{}');
+            
+            if (!settings.sessionTypes || settings.sessionTypes.length === 0) {
+                settings.sessionTypes = [
+                    { name: 'Private', id: 1, defaultPrice: 120 },
+                    { name: 'Duet', id: 2, defaultPrice: 60 },
+                    { name: 'Trio', id: 3, defaultPrice: 45 }
+                ];
+                localStorage.setItem(getOrgKey('settings'), JSON.stringify(settings));
+            }
+            
+            container.innerHTML = '<ul>' + settings.sessionTypes.map((type, index) => 
+                '<li>' + type.name + ': $' + (type.defaultPrice || 0) + 
+                ' <button class="btn-secondary" onclick="editClassPrice(' + index + ')">Edit</button>' +
+                ' <button class="btn-secondary" onclick="deleteClassType(' + index + ')">Delete</button></li>'
+            ).join('') + '</ul>';
+        }
+
+        function editClassPrice(index) {
+            const settings = JSON.parse(localStorage.getItem(getOrgKey('settings')) || '{}');
+            const type = settings.sessionTypes[index];
+            
+            const newName = prompt('Edit class name:', type.name);
+            if (newName && newName.trim()) {
+                type.name = newName.trim();
+            }
+            
+            const newPrice = prompt('Edit default price:', type.defaultPrice);
+            if (newPrice && !isNaN(newPrice)) {
+                type.defaultPrice = parseFloat(newPrice);
+            }
+            
+            localStorage.setItem(getOrgKey('settings'), JSON.stringify(settings));
+            renderClassPricing();
+        }
+
+        function addClassType() {
+            const name = document.getElementById('newClassName').value.trim();
+            const price = parseFloat(document.getElementById('newClassPrice').value) || 0;
+            
+            if (!name) {
+                alert('Please enter a class name');
+                return;
+            }
+            
+            const settings = JSON.parse(localStorage.getItem(getOrgKey('settings')) || '{}');
+            if (!settings.sessionTypes) settings.sessionTypes = [];
+            
+            if (settings.sessionTypes.some(t => t.name.toLowerCase() === name.toLowerCase())) {
+                alert('A class type with this name already exists');
+                return;
+            }
+            
+            settings.sessionTypes.push({
+                name: name,
+                id: Date.now(),
+                defaultPrice: price
+            });
+            
+            localStorage.setItem(getOrgKey('settings'), JSON.stringify(settings));
+            
+            document.getElementById('newClassName').value = '';
+            document.getElementById('newClassPrice').value = '';
+            
+            renderClassPricing();
+            alert('Class type added successfully!');
+        }
+
+        function deleteClassType(index) {
+            if (!confirm('Delete this class type?')) return;
+            
+            const settings = JSON.parse(localStorage.getItem(getOrgKey('settings')) || '{}');
+            settings.sessionTypes.splice(index, 1);
+            localStorage.setItem(getOrgKey('settings'), JSON.stringify(settings));
+            
+            renderClassPricing();
+        }
+
+        // ========================================
+        // PAGE INITIALIZATION
+        // ========================================
+        
+        window.addEventListener('DOMContentLoaded', function() {
+            const currentUser = localStorage.getItem('currentUser');
+            const currentOrg = localStorage.getItem('currentOrganization');
+            
+            if (!currentUser || !currentOrg) {
+                window.location.href = 'login.html';
+                return;
+            }
+            
+            if (!isOwner()) {
+                const incomeTab = document.getElementById('incomeTab');
+                const settingsTab = document.getElementById('settingsTab');
+                if (incomeTab) incomeTab.style.display = 'none';
+                if (settingsTab) settingsTab.style.display = 'none';
+            }
+            
+            const userData = getCurrentUserData();
+            if (userData) {
+                document.getElementById('mainStudioName').textContent = userData.studioName || 'Studio Flow';
+                
+                const settings = JSON.parse(localStorage.getItem(getOrgKey('settings')) || '{}');
+                if (settings.logo) {
+                    updateLogoDisplay(settings.logo);
+                }
+            }
+
+    </script>
+</body>
+</html>
+                                
