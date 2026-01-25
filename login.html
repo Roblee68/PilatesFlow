@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Studio Flow - Login</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: linear-gradient(135deg, #2C4A3E 0%, #4A6B5D 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .login-container {
+            background: white;
+            border-radius: 20px;
+            padding: 50px;
+            max-width: 450px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .logo-section {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .logo-icon {
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, #2C4A3E 0%, #4A6B5D 100%);
+            border-radius: 16px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Cormorant Garamond', serif;
+            font-weight: 600;
+            font-size: 36px;
+            color: white;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 12px rgba(44, 74, 62, 0.2);
+        }
+
+        h1 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 36px;
+            font-weight: 300;
+            color: #2C4A3E;
+            margin-bottom: 10px;
+        }
+
+        .tagline {
+            font-size: 13px;
+            color: #6B6B6B;
+            font-weight: 300;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            background: #FAF8F5;
+            padding: 5px;
+            border-radius: 10px;
+        }
+
+        .tab {
+            flex: 1;
+            padding: 12px;
+            background: transparent;
+            border: none;
+            border-radius: 8px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: #6B6B6B;
+        }
+
+        .tab.active {
+            background: linear-gradient(135deg, #2C4A3E 0%, #4A6B5D 100%);
+            color: white;
+            box-shadow: 0 2px 8px rgba(44, 74, 62, 0.2);
+        }
+
+        .tab:hover:not(.active) {
+            background: rgba(44, 74, 62, 0.05);
+        }
+
+        .form-content {
+            display: none;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        .form-content.active {
+            display: block;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            font-size: 12px;
+            font-weight: 600;
+            color: #2A2A2A;
+            margin-bottom: 8px;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        input {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid #E5DFD6;
+            border-radius: 10px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 14px;
+            color: #2A2A2A;
+            transition: all 0.3s ease;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #2C4A3E;
+            box-shadow: 0 0 0 3px rgba(44, 74, 62, 0.1);
+        }
+
+        button[type="submit"] {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #2C4A3E 0%, #4A6B5D 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 14px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+
+        button[type="submit"]:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(44, 74, 62, 0.3);
+        }
+
+        button[type="submit"]:active {
+            transform: translateY(0);
+        }
+
+        .error-message {
+            background: #FFE5E5;
+            color: #C86B5D;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 13px;
+            display: none;
+            animation: shake 0.5s ease-out;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+
+        .success-message {
+            background: #E8F5E9;
+            color: #2C4A3E;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 13px;
+            display: none;
+        }
+
+        .info-text {
+            text-align: center;
+            font-size: 12px;
+            color: #6B6B6B;
+            margin-top: 20px;
+            line-height: 1.6;
+        }
+
+        .password-hint {
+            font-size: 11px;
+            color: #6B6B6B;
+            margin-top: 4px;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="logo-section">
+            <div class="logo-icon">SF</div>
+            <h1>Studio Flow</h1>
+            <div class="tagline">Boutique Studio Management</div>
+        </div>
+
+        <div class="tabs">
+            <button type="button" class="tab active" onclick="switchTab('login', event)">Login</button>
+            <button type="button" class="tab" onclick="switchTab('signup', event)">Sign Up</button>
+
+        </div>
+
+        <div id="error-message" class="error-message" role="alert" aria-live="assertive"></div>
+        <div id="success-message" class="success-message" role="status" aria-live="polite"></div>
+
+
+        <!-- Login Form -->
+        <div id="login-form" class="form-content active">
+            <form onsubmit="handleLogin(event)">
+                <div class="form-group">
+                    <label for="login-email">Email</label>
+                    <input type="email" id="login-email" required placeholder="your@email.com" autocomplete="email">
+                </div>
+
+                <div class="form-group">
+                    <label for="login-password">Password</label>
+                    <input type="password" id="login-password" required placeholder="Enter your password" autocomplete="current-password">
+                </div>
+
+                <button type="submit">Login to Dashboard</button>
+            </form>
+
+            <div class="info-text">
+                Don't have an account? Click <strong>Sign Up</strong> above.
+            </div>
+        </div>
+
+        <!-- Signup Form -->
+        <div id="signup-form" class="form-content">
+            <form onsubmit="handleSignup(event)">
+                <div class="form-group">
+                    <label for="signup-studio">Studio Name</label>
+                    <input type="text" id="signup-studio" required placeholder="Your Studio Name" autocomplete="organization">
+                </div>
+
+                <div class="form-group">
+                    <label for="signup-email">Email</label>
+                    <input type="email" id="signup-email" required placeholder="your@email.com" autocomplete="email">
+                </div>
+
+                <div class="form-group">
+                    <label for="signup-password">Password</label>
+                    <input type="password" id="signup-password" required placeholder="Create a password" minlength="6" autocomplete="new-password">
+                    <div class="password-hint">At least 6 characters</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="signup-confirm">Confirm Password</label>
+                    <input type="password" id="signup-confirm" required placeholder="Confirm password" autocomplete="new-password">
+                </div>
+
+                <button type="submit">Create Account</button>
+            </form>
+
+            <div class="info-text">
+                Already have an account? Click <strong>Login</strong> above.
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function switchTab(tabName, evt) {
+      // Determine calling element safely (evt may be undefined if called programmatically)
+      const target = evt ? evt.currentTarget : document.querySelector('.tab[onclick*="' + tabName + '"]');
+
+      // Update tabs
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      if (target) target.classList.add('active');
+
+      // Update forms
+      document.querySelectorAll('.form-content').forEach(f => f.classList.remove('active'));
+      const form = document.getElementById(tabName + '-form');
+      if (form) form.classList.add('active');
+
+      // Clear messages
+      hideMessages();
+  }
+
+        function showError(message) {
+            const errorDiv = document.getElementById('error-message');
+            errorDiv.textContent = message;
+            errorDiv.style.display = 'block';
+            
+            // Hide success message
+            document.getElementById('success-message').style.display = 'none';
+        }
+
+        function showSuccess(message) {
+            const successDiv = document.getElementById('success-message');
+            successDiv.textContent = message;
+            successDiv.style.display = 'block';
+            
+            // Hide error message
+            document.getElementById('error-message').style.display = 'none';
+        }
+
+        function hideMessages() {
+            document.getElementById('error-message').style.display = 'none';
+            document.getElementById('success-message').style.display = 'none';
+        }
+
+        function handleLogin(event) {
+            event.preventDefault();
+            hideMessages();
+            
+            const email = document.getElementById('login-email').value.trim();
+            const password = document.getElementById('login-password').value;
+
+            // Get all users from localStorage
+            const users = JSON.parse(localStorage.getItem('studioFlowUsers') || '{}');
+
+            // Check if user exists
+            if (!users[email]) {
+                showError('Account not found. Please sign up first.');
+                return;
+            }
+
+            // Check password
+            if (users[email].password !== password) {
+                showError('Incorrect password. Please try again.');
+                return;
+            }
+
+            // Login successful - save current session
+            localStorage.setItem('currentUser', email);
+            localStorage.setItem('currentOrganization', users[email].organizationId);
+
+            // Show success and redirect
+            showSuccess('Login successful! Redirecting...');
+            
+            setTimeout(() => {
+                window.location.href = 'index.html';
+            }, 1000);
+        }
+
+        function handleSignup(event) {
+            event.preventDefault();
+            hideMessages();
+            
+            const studioName = document.getElementById('signup-studio').value.trim();
+            const email = document.getElementById('signup-email').value.trim();
+            const password = document.getElementById('signup-password').value;
+            const confirm = document.getElementById('signup-confirm').value;
+
+            // Validate studio name
+            if (studioName.length < 2) {
+                showError('Studio name must be at least 2 characters.');
+                return;
+            }
+
+            // Validate passwords match
+            if (password !== confirm) {
+                showError('Passwords do not match. Please try again.');
+                return;
+            }
+
+            // Validate password length
+            if (password.length < 6) {
+                showError('Password must be at least 6 characters.');
+                return;
+            }
+
+            // Get existing users
+            const users = JSON.parse(localStorage.getItem('studioFlowUsers') || '{}');
+
+            // Check if email already exists
+            if (users[email]) {
+                showError('An account with this email already exists. Please login instead.');
+                return;
+            }
+
+            // Create organization ID
+            const organizationId = 'org_' + Date.now() + '_' + Math.random().toString(36).substring(7);
+
+            // Create user account
+            users[email] = {
+                studioName: studioName,
+                password: password,
+                organizationId: organizationId,
+                createdAt: new Date().toISOString()
+            };
+
+            // Save users
+            localStorage.setItem('studioFlowUsers', JSON.stringify(users));
+
+            // Create default settings for this organization
+            const orgSettings = {
+                studioName: studioName,
+                sessionTypes: [
+                    { name: 'Private', id: 1 },
+                    { name: 'Duet', id: 2 },
+                    { name: 'Trio', id: 3 }
+                ]
+            };
+            localStorage.setItem(`settings_${organizationId}`, JSON.stringify(orgSettings));
+
+            // Auto-login
+            localStorage.setItem('currentUser', email);
+            localStorage.setItem('currentOrganization', organizationId);
+
+            // Show success and redirect
+            showSuccess('Account created successfully! Redirecting to dashboard...');
+            
+            setTimeout(() => {
+                window.location.href = 'index.html';
+            }, 1500);
+        }
+
+        // Check if already logged in
+        window.addEventListener('DOMContentLoaded', function() {
+            const currentUser = localStorage.getItem('currentUser');
+            const currentOrg = localStorage.getItem('currentOrganization');
+            
+            if (currentUser && currentOrg) {
+                // Already logged in, redirect to dashboard
+                window.location.href = 'index.html';
+            }
+        });
+    </script>
+</body>
+</html>
