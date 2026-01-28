@@ -1745,29 +1745,6 @@
             return key + '_' + orgId;
         }
 
-        function getCurrentUserData() {
-            const currentUserEmail = localStorage.getItem('currentUser');
-            const users = JSON.parse(localStorage.getItem('studioFlowUsers') || '{}');
-            return users[currentUserEmail] || null;
-        }
-
-        function isOwner() {
-            const currentUserEmail = localStorage.getItem('currentUser');
-            const settings = JSON.parse(localStorage.getItem(getOrgKey('settings')) || '{}');
-            
-            if (!settings.owners) {
-                const userData = getCurrentUserData();
-                if (userData) {
-                    settings.owners = [currentUserEmail];
-                    localStorage.setItem(getOrgKey('settings'), JSON.stringify(settings));
-                    return true;
-                }
-                return false;
-            }
-            
-            return settings.owners.includes(currentUserEmail);
-        }
-
         // ========================================
         // DATA STORAGE
         // ========================================
@@ -2687,9 +2664,7 @@
             // Load all data
             loadData();
             checkIntegrationStatus();
-        });
-      loadData();
-      checkIntegrationStatus();     
+     
         });    
         // ========================================
         // ROLE-BASED ACCESS CONTROL FUNCTIONS
