@@ -82,6 +82,27 @@
             gap: 15px;
             margin-bottom: 10px;
         }
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+    <div class="logo-section">
+        <div class="logo-icon" id="logoIcon">
+            <img src="" alt="SF" id="logoImage" style="display: none;">
+            <span id="logoText">SF</span>
+        </div>
+        <div>
+            <h1 id="mainStudioName">Studio Flow</h1>
+            <div class="tagline">Boutique Studio Management</div>
+        </div>
+    </div>
+    <div style="display: flex; align-items: center; gap: 20px;">
+        <div id="userInfo" style="text-align: right;">
+            <div id="userName" style="font-weight: 600; color: var(--primary);"></div>
+            <div id="userRole" style="font-size: 12px; color: var(--text-light);"></div>
+        </div>
+        <button onclick="handleLogout()" style="padding: 10px 20px; background: var(--error); color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 14px;">
+            Logout
+        </button>
+    </div>
+</div>
 
        .logo-icon {
     width: 50px;
@@ -1244,6 +1265,55 @@
                 grid-template-columns: 1fr;
             }
         }
+        .btn-primary {
+            padding: 12px 24px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(44, 74, 62, 0.3);
+        }
+
+        .btn-secondary {
+            padding: 12px 24px;
+            background: var(--bg);
+            color: var(--text);
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+
+        .btn-secondary:hover {
+            background: white;
+            border-color: var(--primary);
+        }
+
+        .btn-danger {
+            padding: 8px 16px;
+            background: var(--error);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 13px;
+        }
+
+        .btn-danger:hover {
+            opacity: 0.9;
+        }
+   
     </style>
 </head>
 <body>
@@ -1473,34 +1543,6 @@
         <!-- INVOICES TAB -->
         <div id="invoices-tab" class="tab-content">
             <div class="card">
-                <div class="integration-setup">
-                    <h3>💚 QuickBooks Online Integration</h3>
-                    <p>Connect QuickBooks to automatically generate invoices, sync clients, and track payments.</p>
-                    <button type="button" class="btn-quickbooks" onclick="connectQuickBooks()">
-                        <span>🔗</span> Connect QuickBooks
-                    </button>
-                    <div id="quickbooks-status" style="display: none; margin-top: 12px;">
-                        <span class="integration-status">✓ Connected to QuickBooks</span>
-                        <button type="button" class="btn-secondary btn-small" onclick="syncClientsToQuickBooks()" style="margin-left: 12px;">
-                            Sync All Clients
-                        </button>
-                    </div>
-                    
-                    <div class="setup-steps">
-                        <h4 style="font-size: 14px; font-weight: 600; color: var(--primary); margin-bottom: 12px;">Setup Instructions:</h4>
-                        <ol>
-                            <li>Go to <a href="https://developer.intuit.com" target="_blank">developer.intuit.com</a> and create an account</li>
-                            <li>Create a new app and get your <code>Client ID</code> and <code>Client Secret</code></li>
-                            <li>Enable QuickBooks Online API in your app settings</li>
-                            <li>Set redirect URI to: <code>https://yourdomain.com/callback</code></li>
-                            <li>Click "Connect QuickBooks" above to authenticate</li>
-                            <li>After connecting, sync your clients to QuickBooks</li>
-                        </ol>
-                        <p style="margin-top: 16px; font-size: 12px; color: var(--text-light);">
-                            <strong>Note:</strong> This is a production-ready integration framework. You'll need to deploy this app and configure OAuth credentials for it to work. For testing, the app will simulate the connection.
-                        </p>
-                    </div>
-                </div>
 
                 <h2 style="margin-top: 30px;"><span class="section-icon"></span> Invoice Management</h2>
                 
@@ -1672,52 +1714,51 @@
                 </div>
 
                 <!-- Owner Management Section -->
-                <div class="settings-section">
-                    <h3>Owner Permissions</h3>
-                    <div class="permission-notice">
-                        <strong>ℹ️ About Owners:</strong> Owners have full access to all features including Settings and Income pages. Teachers can book sessions and manage clients but cannot access Settings or Income data.
-                    </div>
-                    
-                    <div id="ownersList" class="owner-management-list">
-                        <!-- Dynamically populated -->
-                    </div>
-                    
-                    <div class="add-new-section">
-                        <input type="email" id="newOwnerEmail" placeholder="Enter email to add as owner">
-                        <button class="btn-primary" onclick="addOwner()">Add Owner</button>
-                    </div>
-                </div>
+                <div id="settings-content" class="tab-content">
+    <div class="card">
+        <!-- User Management Section (Owner Only) -->
+        <div id="userManagementSection"></div>
 
-                <!-- Teacher Management Section -->
-                <div class="settings-section">
-                    <h3>Teacher Management</h3>
-                    <p style="margin-bottom: 15px; font-size: 13px; color: var(--text-light);">
-                        Inactive teachers won't appear in booking forms. You can reactivate them at any time.
-                    </p>
-                    <div id="teachersList" class="teacher-list">
-                        <!-- Dynamically populated -->
-                    </div>
-                </div>
+        <!-- QuickBooks Integration (Owner/Admin Only) -->
+        <div id="quickbooksSection"></div>
 
-                <!-- Class Pricing Section -->
-                <div class="settings-section">
-                    <h3>Class Types & Pricing</h3>
-                    <p style="margin-bottom: 15px; font-size: 13px; color: var(--text-light);">
-                        Set your class types and default pricing. These prices will be used for new clients unless customized.
+        <!-- Studio Settings -->
+        <div class="settings-section">
+            <h3>🎨 Studio Settings</h3>
+            
+            <div class="form-group">
+                <label for="studio-name">Studio Name</label>
+                <input type="text" id="studio-name" placeholder="Your Studio Name">
+            </div>
+
+            <div class="form-group logo-upload-section">
+                <div>
+                    <label>Studio Logo</label>
+                    <input type="file" id="logo-upload" accept="image/*" onchange="handleLogoUpload(event)">
+                    <p style="font-size: 12px; color: var(--text-light); margin-top: 5px;">
+                        Recommended: Square image, at least 200x200px
                     </p>
-                    
-                    <div id="classPricingList" class="class-pricing-list">
-                        <!-- Dynamically populated -->
-                    </div>
-                    
-                    <div class="add-new-section">
-                        <input type="text" id="newClassName" placeholder="New class type name (e.g., Group Class)">
-                        <input type="number" id="newClassPrice" placeholder="Default price" min="0" step="0.01" style="width: 150px;">
-                        <button class="btn-primary" onclick="addClassType()">Add Class Type</button>
-                    </div>
+                </div>
+                <div class="logo-preview" id="logo-preview-settings">
+                    <div class="logo-icon">SF</div>
                 </div>
             </div>
+
+            <button onclick="saveSettings()" class="btn-primary">Save Settings</button>
         </div>
+
+        <!-- Session Types -->
+        <div class="settings-section">
+            <h3>📋 Session Types</h3>
+            <div id="session-types-list"></div>
+            <div style="display: flex; gap: 10px; margin-top: 15px;">
+                <input type="text" id="new-session-type" placeholder="New session type..." 
+                       style="flex: 1; padding: 12px; border: 2px solid var(--border); border-radius: 8px;">
+                <button onclick="addSessionType()" class="btn-primary">Add Type</button>
+            </div>
+        </div>
+    </div>
+
     <script>
 
     // ========================================
@@ -2113,11 +2154,29 @@
             } else {
                 updateLogoDisplay(null);
             }
-            
-            renderOwnersList();
-            renderTeachersList();
-            renderClassPricing();
+            // Load user management (owner only)
+            const userMgmtSection = document.getElementById('userManagementSection');
+            if (userMgmtSection) {
+                if (canManageUsers()) {
+                    userMgmtSection.innerHTML = renderUserManagement();
+                } else {
+                    userMgmtSection.innerHTML = '';
+                }
+            }
+
+        // Load QuickBooks settings (owner/admin only)
+        const qbSection = document.getElementById('quickbooksSection');
+        if (qbSection) {
+            if (canAccessSettings()) {
+                qbSection.innerHTML = renderQuickBooksSettings();
+            } else {
+                qbSection.innerHTML = '';
+            }
         }
+
+        renderOwnersList();
+        renderTeachersList();
+        renderClassPricing();
 
         function saveBusinessInfo() {
             const studioName = document.getElementById('studioNameSetting').value.trim();
@@ -2602,35 +2661,460 @@
         // PAGE INITIALIZATION
         // ========================================
         
-        window.addEventListener('DOMContentLoaded', function() {
+       window.addEventListener('DOMContentLoaded', function() {
             const currentUser = localStorage.getItem('currentUser');
             const currentOrg = localStorage.getItem('currentOrganization');
-            
+    
             if (!currentUser || !currentOrg) {
                 window.location.href = 'login.html';
                 return;
             }
-            
-            if (!isOwner()) {
+
+            const userData = getCurrentUserData();
+            if (!userData) {
+                // User data not found, force logout
+                localStorage.removeItem('currentUser');
+                localStorage.removeItem('currentOrganization');
+                window.location.href = 'login.html';
+                return;
+            }
+
+            // Display user info
+            const userNameEl = document.getElementById('userName');
+            const userRoleEl = document.getElementById('userRole');
+            if (userNameEl) userNameEl.textContent = userData.fullName || 'User';
+            if (userRoleEl) {
+                const roleDisplay = userData.role.charAt(0).toUpperCase() + userData.role.slice(1);
+                userRoleEl.textContent = roleDisplay;
+            }
+
+            // Set studio name
+            document.getElementById('mainStudioName').textContent = userData.studioName || 'Studio Flow';
+
+            // Apply role-based UI restrictions
+            const role = userData.role;
+    
+            // Hide tabs based on role
+            if (role === 'teacher') {
+                // Teachers can't see Income or Settings tabs
                 const incomeTab = document.getElementById('incomeTab');
                 const settingsTab = document.getElementById('settingsTab');
                 if (incomeTab) incomeTab.style.display = 'none';
                 if (settingsTab) settingsTab.style.display = 'none';
             }
-            
-            const userData = getCurrentUserData();
-            if (userData) {
-                document.getElementById('mainStudioName').textContent = userData.studioName || 'Studio Flow';
-                
-                const settings = JSON.parse(localStorage.getItem(getOrgKey('settings')) || '{}');
-                if (settings.logo) {
-                    updateLogoDisplay(settings.logo);
-                }
+
+            // Load settings logo if exists
+            const settings = JSON.parse(localStorage.getItem(getOrgKey('settings')) || '{}');
+            if (settings.logo) {
+                updateLogoDisplay(settings.logo);
             }
+
+            // Load all data
+            loadData();
+            checkIntegrationStatus();
+        });
       loadData();
       checkIntegrationStatus();     
-        });        
+        });    
+        // ========================================
+        // ROLE-BASED ACCESS CONTROL FUNCTIONS
+        // ========================================
 
+        function getCurrentUserData() {
+            const currentUser = localStorage.getItem('currentUser');
+            if (!currentUser) return null;
+    
+            const users = JSON.parse(localStorage.getItem('studioFlowUsers') || '{}');
+            return users[currentUser] || null;
+        }
+    
+        function getUserRole() {
+            const userData = getCurrentUserData();
+            return userData ? userData.role : null;
+        }
+
+        function isOwner() {
+            return getUserRole() === 'owner';
+        }
+
+        function isAdmin() {
+            return getUserRole() === 'admin';
+        }
+
+        function isTeacher() {
+            return getUserRole() === 'teacher';
+        }
+
+        function isOwnerOrAdmin() {
+            const role = getUserRole();
+            return role === 'owner' || role === 'admin';
+        }
+
+        function canAccessSettings() {
+            return isOwnerOrAdmin();
+        }
+
+        function canAccessFinancials() {
+            return isOwnerOrAdmin();
+        }
+
+        function canManageUsers() {
+            return isOwner(); // Only owners can manage users
+        }
+
+        function getOrgKey(key) {
+            const orgId = localStorage.getItem('currentOrganization');
+            return `${key}_${orgId}`;
+        }
+
+        // ========================================
+        // USER MANAGEMENT FUNCTIONS
+        // ========================================
+
+        function loadOrgUsers() {
+            const orgId = localStorage.getItem('currentOrganization');
+            const orgUsers = JSON.parse(localStorage.getItem(`org_users_${orgId}`) || '{}');
+            return Object.values(orgUsers);
+        }
+
+        function addUserToOrganization(email, fullName, role, password) {
+            const orgId = localStorage.getItem('currentOrganization');
+            const currentUserData = getCurrentUserData();
+    
+            if (!canManageUsers()) {
+                alert('Only owners can add users to the organization.');
+                return false;
+            }
+
+            // Check if email already exists in global users
+            const allUsers = JSON.parse(localStorage.getItem('studioFlowUsers') || '{}');
+            if (allUsers[email]) {
+                alert('A user with this email already exists.');
+                return false;
+            }
+
+    // Create user ID
+        const userId = 'user_' + Date.now() + '_' + Math.random().toString(36).substring(7);
+
+    // Add to global users
+    allUsers[email] = {
+        fullName: fullName,
+        studioName: currentUserData.studioName,
+        password: password,
+        organizationId: orgId,
+        role: role,
+        createdAt: new Date().toISOString(),
+        userId: userId,
+        addedBy: localStorage.getItem('currentUser')
+    };
+    localStorage.setItem('studioFlowUsers', JSON.stringify(allUsers));
+
+    // Add to organization users
+    const orgUsers = JSON.parse(localStorage.getItem(`org_users_${orgId}`) || '{}');
+    orgUsers[email] = {
+        email: email,
+        fullName: fullName,
+        role: role,
+        userId: userId,
+        addedAt: new Date().toISOString(),
+        addedBy: localStorage.getItem('currentUser')
+    };
+    localStorage.setItem(`org_users_${orgId}`, JSON.stringify(orgUsers));
+
+    return true;
+}
+
+function removeUserFromOrganization(email) {
+    if (!canManageUsers()) {
+        alert('Only owners can remove users.');
+        return false;
+    }
+
+    const currentUser = localStorage.getItem('currentUser');
+    if (email === currentUser) {
+        alert('You cannot remove yourself.');
+        return false;
+    }
+
+    if (!confirm(`Are you sure you want to remove this user?\n\nEmail: ${email}\n\nThey will no longer be able to access this organization.`)) {
+        return false;
+    }
+
+    const orgId = localStorage.getItem('currentOrganization');
+
+    // Remove from organization users
+    const orgUsers = JSON.parse(localStorage.getItem(`org_users_${orgId}`) || '{}');
+    delete orgUsers[email];
+    localStorage.setItem(`org_users_${orgId}`, JSON.stringify(orgUsers));
+
+    // Remove from global users
+    const allUsers = JSON.parse(localStorage.getItem('studioFlowUsers') || '{}');
+    delete allUsers[email];
+    localStorage.setItem('studioFlowUsers', JSON.stringify(allUsers));
+
+    return true;
+}
+
+function updateUserRole(email, newRole) {
+    if (!canManageUsers()) {
+        alert('Only owners can change user roles.');
+        return false;
+    }
+
+    const currentUser = localStorage.getItem('currentUser');
+    if (email === currentUser) {
+        alert('You cannot change your own role.');
+        return false;
+    }
+
+    const orgId = localStorage.getItem('currentOrganization');
+
+    // Update in organization users
+    const orgUsers = JSON.parse(localStorage.getItem(`org_users_${orgId}`) || '{}');
+    if (orgUsers[email]) {
+        orgUsers[email].role = newRole;
+        localStorage.setItem(`org_users_${orgId}`, JSON.stringify(orgUsers));
+    }
+
+    // Update in global users
+    const allUsers = JSON.parse(localStorage.getItem('studioFlowUsers') || '{}');
+    if (allUsers[email]) {
+        allUsers[email].role = newRole;
+        localStorage.setItem('studioFlowUsers', JSON.stringify(allUsers));
+    }
+
+    return true;
+}
+
+// ========================================
+// UI RENDERING FUNCTIONS
+// ========================================
+
+function renderUserManagement() {
+    if (!canManageUsers()) {
+        return '<div class="card"><p>Only organization owners can manage users.</p></div>';
+    }
+
+    const users = loadOrgUsers();
+    const currentUser = localStorage.getItem('currentUser');
+
+    let html = `
+        <div class="settings-section">
+            <h3>🔐 User Management</h3>
+            <p style="color: var(--text-light); margin-bottom: 20px;">
+                Manage your team members and their access levels. Owners have full access, 
+                Admins can manage settings, and Teachers can manage clients and sessions.
+            </p>
+
+            <div class="card" style="margin-bottom: 30px;">
+                <h4 style="margin-bottom: 20px; color: var(--primary);">Add New User</h4>
+                <form onsubmit="handleAddUser(event)" style="display: grid; gap: 15px;">
+                    <div class="form-group">
+                        <label>Full Name</label>
+                        <input type="text" id="new-user-name" required placeholder="John Doe">
+                    </div>
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" id="new-user-email" required placeholder="john@example.com">
+                    </div>
+                    <div class="form-group">
+                        <label>Password</label>
+                        <input type="password" id="new-user-password" required minlength="6" placeholder="At least 6 characters">
+                    </div>
+                    <div class="form-group">
+                        <label>Role</label>
+                        <select id="new-user-role" required>
+                            <option value="">Select a role...</option>
+                            <option value="admin">Admin - Can manage settings and integrations</option>
+                            <option value="teacher">Teacher - Can manage clients and sessions</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn-primary">Add User</button>
+                </form>
+            </div>
+
+            <div class="card">
+                <h4 style="margin-bottom: 20px; color: var(--primary);">Current Users (${users.length})</h4>
+                <div class="user-list">
+    `;
+
+    users.forEach(user => {
+        const isCurrentUser = user.email === currentUser;
+        const roleColor = user.role === 'owner' ? '#2C4A3E' : user.role === 'admin' ? '#4A6B5D' : '#D4A574';
+        const roleLabel = user.role.charAt(0).toUpperCase() + user.role.slice(1);
+
+        html += `
+            <div class="user-item" style="padding: 20px; border: 2px solid var(--border); border-radius: 12px; margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                    <div style="font-weight: 600; font-size: 16px; margin-bottom: 5px;">
+                        ${user.fullName} ${isCurrentUser ? '<span style="color: var(--accent); font-size: 12px;">(You)</span>' : ''}
+                    </div>
+                    <div style="color: var(--text-light); font-size: 14px; margin-bottom: 8px;">
+                        ${user.email}
+                    </div>
+                    <span style="display: inline-block; padding: 4px 12px; background: ${roleColor}; color: white; border-radius: 6px; font-size: 12px; font-weight: 600;">
+                        ${roleLabel}
+                    </span>
+                </div>
+                ${!isCurrentUser && user.role !== 'owner' ? `
+                    <div style="display: flex; gap: 10px;">
+                        <select onchange="handleChangeRole('${user.email}', this.value)" style="padding: 8px 12px; border: 2px solid var(--border); border-radius: 8px; font-size: 13px;">
+                            <option value="">Change Role...</option>
+                            <option value="admin" ${user.role === 'admin' ? 'disabled' : ''}>Make Admin</option>
+                            <option value="teacher" ${user.role === 'teacher' ? 'disabled' : ''}>Make Teacher</option>
+                        </select>
+                        <button onclick="handleRemoveUser('${user.email}')" class="btn-danger" style="padding: 8px 16px; background: var(--error); color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 13px; font-weight: 600;">
+                            Remove
+                        </button>
+                    </div>
+                ` : ''}
+            </div>
+        `;
+    });
+
+    html += `
+                </div>
+            </div>
+        </div>
+    `;
+
+    return html;
+}
+
+function handleAddUser(event) {
+    event.preventDefault();
+
+    const fullName = document.getElementById('new-user-name').value.trim();
+    const email = document.getElementById('new-user-email').value.trim();
+    const password = document.getElementById('new-user-password').value;
+    const role = document.getElementById('new-user-role').value;
+
+    if (!fullName || !email || !password || !role) {
+        alert('Please fill in all fields.');
+        return;
+    }
+
+    if (password.length < 6) {
+        alert('Password must be at least 6 characters.');
+        return;
+    }
+
+    if (addUserToOrganization(email, fullName, role, password)) {
+        alert(`✓ User added successfully!\n\n${fullName} can now log in with:\nEmail: ${email}\nPassword: [as set]\nRole: ${role}`);
+        
+        // Clear form
+        document.getElementById('new-user-name').value = '';
+        document.getElementById('new-user-email').value = '';
+        document.getElementById('new-user-password').value = '';
+        document.getElementById('new-user-role').value = '';
+
+        // Refresh user list
+        loadData();
+    }
+}
+
+function handleRemoveUser(email) {
+    if (removeUserFromOrganization(email)) {
+        alert('User removed successfully.');
+        loadData();
+    }
+}
+
+function handleChangeRole(email, newRole) {
+    if (!newRole) return;
+
+    if (updateUserRole(email, newRole)) {
+        alert(`Role updated successfully to ${newRole}.`);
+        loadData();
+    }
+}
+
+function renderQuickBooksSettings() {
+    if (!canAccessSettings()) {
+        return '';
+    }
+
+    const isConnected = localStorage.getItem(getOrgKey('quickbooks_connected'));
+    
+    return `
+        <div class="settings-section">
+            <h3>💰 QuickBooks Online Integration</h3>
+            <p style="color: var(--text-light); margin-bottom: 20px;">
+                Connect your QuickBooks Online account to automatically sync clients, generate invoices, 
+                and track payments.
+            </p>
+
+            <div class="card">
+                ${isConnected ? `
+                    <div class="status-badge" style="background: #E8F5E9; color: #2C4A3E; padding: 12px 20px; border-radius: 8px; margin-bottom: 20px; display: flex; align-items: center; gap: 10px;">
+                        <span style="font-size: 20px;">✓</span>
+                        <div>
+                            <div style="font-weight: 600;">Connected to QuickBooks</div>
+                            <div style="font-size: 12px; opacity: 0.8;">Your account is synced and ready</div>
+                        </div>
+                    </div>
+
+                    <div style="display: grid; gap: 15px; margin-bottom: 20px;">
+                        <button onclick="syncClientsToQuickBooks()" class="btn-primary">
+                            Sync Clients to QuickBooks
+                        </button>
+                        <button onclick="disconnectQuickBooks()" class="btn-secondary" style="background: var(--error);">
+                            Disconnect QuickBooks
+                        </button>
+                    </div>
+
+                    <div style="background: var(--bg); padding: 15px; border-radius: 8px; font-size: 13px; color: var(--text-light);">
+                        <strong>Available Features:</strong>
+                        <ul style="margin-top: 10px; margin-left: 20px; line-height: 1.8;">
+                            <li>Automatic client syncing</li>
+                            <li>Invoice generation</li>
+                            <li>Payment tracking</li>
+                            <li>Financial reporting</li>
+                        </ul>
+                    </div>
+                ` : `
+                    <div style="text-align: center; padding: 20px;">
+                        <div style="font-size: 48px; margin-bottom: 15px;">💼</div>
+                        <h4 style="margin-bottom: 10px; color: var(--primary);">Connect QuickBooks Online</h4>
+                        <p style="color: var(--text-light); margin-bottom: 25px; line-height: 1.6;">
+                            Streamline your accounting by connecting QuickBooks. Automatically sync clients, 
+                            generate invoices, and track all your studio finances in one place.
+                        </p>
+                        <button onclick="connectQuickBooks()" class="btn-primary">
+                            Connect to QuickBooks
+                        </button>
+                    </div>
+                `}
+            </div>
+        </div>
+    `;
+}
+
+function disconnectQuickBooks() {
+    if (!canAccessSettings()) {
+        alert('Only owners and admins can manage integrations.');
+        return;
+    }
+
+    if (confirm('Disconnect QuickBooks?\n\nYou can reconnect at any time.')) {
+        localStorage.removeItem(getOrgKey('quickbooks_connected'));
+        localStorage.removeItem(getOrgKey('quickbooks_token'));
+        alert('Disconnected from QuickBooks');
+        loadData();
+    }
+}
+
+// Logout function
+function handleLogout() {
+    if (confirm('Are you sure you want to logout?')) {
+        localStorage.removeItem('currentUser');
+        localStorage.removeItem('currentOrganization');
+        window.location.href = 'login.html';
+    }
+}
+
+
+        
     </script>
 </body>
 </html>
