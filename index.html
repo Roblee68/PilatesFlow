@@ -71,62 +71,36 @@
             z-index: 1;
         }
 
-        header {
-            margin-bottom: 40px;
-            animation: fadeInDown 0.6s ease-out;
+         <header>
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px;">
+                <div class="logo-section">
+                    <div class="logo-icon" id="logoIcon">
+                        <img src="" alt="SF" id="logoImage" style="display: none;">
+                        <span id="logoText">SF</span>
+                    </div>
+                    <div>
+                        <h1 id="mainStudioName">Studio Flow</h1>
+                        <div class="tagline">Boutique Studio Management</div>
+                    </div>
+                </div>
+                <div style="display: flex; align-items: center; gap: 20px;">
+                    <div id="userInfo" style="text-align: right;">
+                        <div id="userName" style="font-weight: 600; color: var(--primary); font-size: 16px;"></div>
+                        <div id="userRole" style="font-size: 12px; color: var(--text-light); margin-top: 3px;"></div>
+                    </div>
+                    <button onclick="handleLogout()" style="padding: 12px 24px; background: linear-gradient(135deg, #C86B5D 0%, #B5564A 100%); color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 14px; transition: all 0.3s ease;">
+                        Logout
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        /* ADD THESE NEW LINES AFTER .logo-icon */
+        .logo-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
-
-        .logo-section {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            margin-bottom: 10px;
-        }
-        <div style="display: flex; justify-content: space-between; align-items: center;">
-    <div class="logo-section">
-        <div class="logo-icon" id="logoIcon">
-            <img src="" alt="SF" id="logoImage" style="display: none;">
-            <span id="logoText">SF</span>
-        </div>
-        <div>
-            <h1 id="mainStudioName">Studio Flow</h1>
-            <div class="tagline">Boutique Studio Management</div>
-        </div>
-    </div>
-    <div style="display: flex; align-items: center; gap: 20px;">
-        <div id="userInfo" style="text-align: right;">
-            <div id="userName" style="font-weight: 600; color: var(--primary);"></div>
-            <div id="userRole" style="font-size: 12px; color: var(--text-light);"></div>
-        </div>
-        <button onclick="handleLogout()" style="padding: 10px 20px; background: var(--error); color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 14px;">
-            Logout
-        </button>
-    </div>
-</div>
-
-       .logo-icon {
-    width: 50px;
-    height: 50px;
-    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
-    border-radius: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-family: 'Cormorant Garamond', serif;
-    font-weight: 600;
-    font-size: 28px;
-    color: white;
-    letter-spacing: -1px;
-    box-shadow: 0 4px 12px var(--shadow);
-    overflow: hidden;  /* NEW LINE */
-}
-
-/* ADD THESE NEW LINES AFTER .logo-icon */
-.logo-icon img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
 
         h1 {
             font-family: 'Cormorant Garamond', serif;
@@ -1332,14 +1306,14 @@
             </div>
         </header>
 
-        <div class="nav-tabs">
-            <button class="tab active" onclick="switchTab('clients', event)">Clients</button>
-            <button class="tab" onclick="switchTab('sessions', event)">Sessions & Booking</button>
-            <button class="tab" onclick="switchTab('teachers', event)">Teachers</button>
-            <button class="tab" onclick="switchTab('invoices', event)">Invoices</button>
-            <button class="tab" onclick="switchTab('income', event)" id="incomeTab">Income Tracking</button>
-            <button class="tab" onclick="switchTab('settings', event)" id="settingsTab">⚙️ Settings</button>  
-        </div>
+        <nav class="nav-tabs">
+            <button class="tab active" onclick="showTab('dashboard')">📊 Dashboard</button>
+            <button class="tab" onclick="showTab('clients')">👥 Clients</button>
+            <button class="tab" onclick="showTab('sessions')">🗓️ Sessions</button>
+            <button class="tab" id="incomeTab" onclick="showTab('income')">💰 Income</button>
+            <button class="tab" onclick="showTab('integrations')">🔗 Integrations</button>
+            <button class="tab" id="settingsTab" onclick="showTab('settings')">⚙️ Settings</button>
+        </nav>
 
         <!-- CLIENTS TAB -->
         <div id="clients-tab" class="tab-content active">
@@ -1714,7 +1688,7 @@
                 </div>
 
                 <!-- Owner Management Section -->
-                <div id="settings-content" class="tab-content">
+ <div id="settings-content" class="tab-content">
     <div class="card">
         <!-- User Management Section (Owner Only) -->
         <div id="userManagementSection"></div>
@@ -1758,10 +1732,11 @@
             </div>
         </div>
     </div>
+</div>
 
     <script>
 
-    // ========================================
+        // ========================================
         // UTILITY FUNCTIONS
         // ========================================
         
