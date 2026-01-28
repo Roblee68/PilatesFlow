@@ -1704,53 +1704,11 @@
                         </div>
                     </div>
                 </div>
+                <!-- User Management Section (Owner Only) -->
+                <div id="userManagementSection"></div>
 
-                <!-- Owner Management Section -->
- <div id="settings-content" class="tab-content">
-    <div class="card">
-        <!-- User Management Section (Owner Only) -->
-        <div id="userManagementSection"></div>
-
-        <!-- QuickBooks Integration (Owner/Admin Only) -->
-        <div id="quickbooksSection"></div>
-
-        <!-- Studio Settings -->
-        <div class="settings-section">
-            <h3>🎨 Studio Settings</h3>
-            
-            <div class="form-group">
-                <label for="studio-name">Studio Name</label>
-                <input type="text" id="studio-name" placeholder="Your Studio Name">
-            </div>
-
-            <div class="form-group logo-upload-section">
-                <div>
-                    <label>Studio Logo</label>
-                    <input type="file" id="logo-upload" accept="image/*" onchange="handleLogoUpload(event)">
-                    <p style="font-size: 12px; color: var(--text-light); margin-top: 5px;">
-                        Recommended: Square image, at least 200x200px
-                    </p>
-                </div>
-                <div class="logo-preview" id="logo-preview-settings">
-                    <div class="logo-icon">SF</div>
-                </div>
-            </div>
-
-            <button onclick="saveSettings()" class="btn-primary">Save Settings</button>
-        </div>
-
-        <!-- Session Types -->
-        <div class="settings-section">
-            <h3>📋 Session Types</h3>
-            <div id="session-types-list"></div>
-            <div style="display: flex; gap: 10px; margin-top: 15px;">
-                <input type="text" id="new-session-type" placeholder="New session type..." 
-                       style="flex: 1; padding: 12px; border: 2px solid var(--border); border-radius: 8px;">
-                <button onclick="addSessionType()" class="btn-primary">Add Type</button>
-            </div>
-        </div>
-    </div>
-</div>
+                <!-- QuickBooks Integration (Owner/Admin Only) -->
+                <div id="quickbooksSection"></div>
 
     <script>
 
