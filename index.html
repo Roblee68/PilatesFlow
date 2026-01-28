@@ -1307,14 +1307,13 @@
         </header>
 
         <nav class="nav-tabs">
-            <button class="tab active" onclick="showTab('dashboard')">📊 Dashboard</button>
-            <button class="tab" onclick="showTab('clients')">👥 Clients</button>
-            <button class="tab" onclick="showTab('sessions')">🗓️ Sessions</button>
-            <button class="tab" id="incomeTab" onclick="showTab('income')">💰 Income</button>
-            <button class="tab" onclick="showTab('integrations')">🔗 Integrations</button>
-            <button class="tab" id="settingsTab" onclick="showTab('settings')">⚙️ Settings</button>
+          <button class="tab active" onclick="switchTab('clients', event)">👥 Clients</button>
+          <button class="tab" onclick="switchTab('teachers', event)">👨‍🏫 Teachers</button>
+          <button class="tab" onclick="switchTab('sessions', event)">🗓️ Sessions</button>
+          <button class="tab" onclick="switchTab('invoices', event)">🧾 Invoices</button>
+          <button class="tab" onclick="switchTab('income', event)">💰 Income</button>
+          <button class="tab" id="settingsTab" onclick="switchTab('settings', event)">⚙️ Settings</button>
         </nav>
-
         <!-- CLIENTS TAB -->
         <div id="clients-tab" class="tab-content active">
             <div class="main-grid">
@@ -2129,6 +2128,7 @@
         renderOwnersList();
         renderTeachersList();
         renderClassPricing();
+        }
 
         function saveBusinessInfo() {
             const studioName = document.getElementById('studioNameSetting').value.trim();
