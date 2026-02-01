@@ -428,6 +428,7 @@
                 await auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
                 
                 // Sign in with Firebase Auth
+                await auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
                 const userCredential = await auth.signInWithEmailAndPassword(email, password);
                 const user = userCredential.user;
                 
