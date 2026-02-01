@@ -5,12 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Studio Flow - Login</title>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
-    
-    <!-- Firebase SDK -->
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
-    
     <style>
         * {
             margin: 0;
@@ -142,7 +136,7 @@
             text-transform: uppercase;
         }
 
-        input, select {
+        input {
             width: 100%;
             padding: 14px 16px;
             border: 2px solid #E5DFD6;
@@ -151,17 +145,12 @@
             font-size: 14px;
             color: #2A2A2A;
             transition: all 0.3s ease;
-            background: white;
         }
 
-        input:focus, select:focus {
+        input:focus {
             outline: none;
             border-color: #2C4A3E;
             box-shadow: 0 0 0 3px rgba(44, 74, 62, 0.1);
-        }
-
-        select {
-            cursor: pointer;
         }
 
         button[type="submit"] {
@@ -231,37 +220,6 @@
             margin-top: 4px;
             font-style: italic;
         }
-
-        .role-badge {
-            display: inline-block;
-            padding: 4px 10px;
-            border-radius: 6px;
-            font-size: 11px;
-            font-weight: 600;
-            margin-top: 5px;
-        }
-
-        .role-badge.owner {
-            background: #2C4A3E;
-            color: white;
-        }
-
-        .role-badge.admin {
-            background: #4A6B5D;
-            color: white;
-        }
-
-        .role-badge.teacher {
-            background: #D4A574;
-            color: white;
-        }
-
-        .helper-text {
-            font-size: 11px;
-            color: #6B6B6B;
-            margin-top: 5px;
-            line-height: 1.4;
-        }
     </style>
 </head>
 <body>
@@ -275,10 +233,12 @@
         <div class="tabs">
             <button type="button" class="tab active" onclick="switchTab('login', event)">Login</button>
             <button type="button" class="tab" onclick="switchTab('signup', event)">Sign Up</button>
+
         </div>
 
         <div id="error-message" class="error-message" role="alert" aria-live="assertive"></div>
         <div id="success-message" class="success-message" role="status" aria-live="polite"></div>
+
 
         <!-- Login Form -->
         <div id="login-form" class="form-content active">
@@ -301,18 +261,12 @@
             </div>
         </div>
 
-        <!-- Signup Form - Now creates organization owner -->
+        <!-- Signup Form -->
         <div id="signup-form" class="form-content">
             <form onsubmit="handleSignup(event)">
                 <div class="form-group">
                     <label for="signup-studio">Studio Name</label>
                     <input type="text" id="signup-studio" required placeholder="Your Studio Name" autocomplete="organization">
-                    <div class="helper-text">Creating an account makes you the organization owner</div>
-                </div>
-
-                <div class="form-group">
-                    <label for="signup-name">Your Full Name</label>
-                    <input type="text" id="signup-name" required placeholder="John Doe" autocomplete="name">
                 </div>
 
                 <div class="form-group">
@@ -331,54 +285,39 @@
                     <input type="password" id="signup-confirm" required placeholder="Confirm password" autocomplete="new-password">
                 </div>
 
-                <button type="submit">Create Account as Owner</button>
+                <button type="submit">Create Account</button>
             </form>
 
             <div class="info-text">
-                Already have an account? Click <strong>Login</strong> above.<br>
-                <span class="role-badge owner">OWNER</span> Full access to all features and settings
+                Already have an account? Click <strong>Login</strong> above.
             </div>
         </div>
     </div>
 
     <script>
-        // ========================================
-        // FIREBASE CONFIGURATION
-        // ========================================
-        const firebaseConfig = {
-            apiKey: "AIzaSyD_BGXX9kB8EPKKln6WYrK0QN1abKaufNA",
-            authDomain: "flow-crm-2026rl.firebaseapp.com",
-            projectId: "flow-crm-2026rl",
-            storageBucket: "flow-crm-2026rl.firebasestorage.app",
-            messagingSenderId: "233927450484",
-            appId: "1:233927450484:web:cdd4852347e8450dbbd621"
-        };
-
-        // Initialize Firebase
-        firebase.initializeApp(firebaseConfig);
-        const auth = firebase.auth();
-        const db = firebase.firestore();
-
-        // ========================================
-        // UI FUNCTIONS
-        // ========================================
         function switchTab(tabName, evt) {
-            const target = evt ? evt.currentTarget : document.querySelector('.tab[onclick*="' + tabName + '"]');
+      // Determine calling element safely (evt may be undefined if called programmatically)
+      const target = evt ? evt.currentTarget : document.querySelector('.tab[onclick*="' + tabName + '"]');
 
-            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-            if (target) target.classList.add('active');
+      // Update tabs
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      if (target) target.classList.add('active');
 
-            document.querySelectorAll('.form-content').forEach(f => f.classList.remove('active'));
-            const form = document.getElementById(tabName + '-form');
-            if (form) form.classList.add('active');
+      // Update forms
+      document.querySelectorAll('.form-content').forEach(f => f.classList.remove('active'));
+      const form = document.getElementById(tabName + '-form');
+      if (form) form.classList.add('active');
 
-            hideMessages();
-        }
+      // Clear messages
+      hideMessages();
+  }
 
         function showError(message) {
             const errorDiv = document.getElementById('error-message');
             errorDiv.textContent = message;
             errorDiv.style.display = 'block';
+            
+            // Hide success message
             document.getElementById('success-message').style.display = 'none';
         }
 
@@ -386,6 +325,8 @@
             const successDiv = document.getElementById('success-message');
             successDiv.textContent = message;
             successDiv.style.display = 'block';
+            
+            // Hide error message
             document.getElementById('error-message').style.display = 'none';
         }
 
@@ -394,162 +335,123 @@
             document.getElementById('success-message').style.display = 'none';
         }
 
-        function setLoading(isLoading) {
-            const buttons = document.querySelectorAll('button[type="submit"]');
-            buttons.forEach(btn => {
-                btn.disabled = isLoading;
-                btn.style.opacity = isLoading ? '0.7' : '1';
-            });
-        }
-
-        // ========================================
-        // FIREBASE AUTH FUNCTIONS
-        // ========================================
-        async function handleLogin(event) {
+        function handleLogin(event) {
             event.preventDefault();
             hideMessages();
-            setLoading(true);
             
             const email = document.getElementById('login-email').value.trim();
             const password = document.getElementById('login-password').value;
 
-            try {
-                // Sign in with Firebase Auth
-                const userCredential = await auth.signInWithEmailAndPassword(email, password);
-                const user = userCredential.user;
+            // Get all users from localStorage
+            const users = JSON.parse(localStorage.getItem('studioFlowUsers') || '{}');
 
-                // Get user data from Firestore
-                const userDoc = await db.collection('users').doc(user.uid).get();
-                
-                if (!userDoc.exists) {
-                    showError('User profile not found. Please contact support.');
-                    setLoading(false);
-                    return;
-                }
-
-                const userData = userDoc.data();
-                const roleDisplay = userData.role.charAt(0).toUpperCase() + userData.role.slice(1);
-                
-                showSuccess(`Login successful as ${roleDisplay}! Redirecting...`);
-                
-                setTimeout(() => {
-                    window.location.href = 'index.html';
-                }, 1000);
-
-            } catch (error) {
-                console.error('Login error:', error);
-                
-                // Handle specific Firebase errors
-                switch (error.code) {
-                    case 'auth/user-not-found':
-                        showError('Account not found. Please sign up first.');
-                        break;
-                    case 'auth/wrong-password':
-                        showError('Incorrect password. Please try again.');
-                        break;
-                    case 'auth/invalid-email':
-                        showError('Invalid email address.');
-                        break;
-                    case 'auth/too-many-requests':
-                        showError('Too many failed attempts. Please try again later.');
-                        break;
-                    default:
-                        showError('Login failed: ' + error.message);
-                }
-                setLoading(false);
+            // Check if user exists
+            if (!users[email]) {
+                showError('Account not found. Please sign up first.');
+                return;
             }
+
+            // Check password
+            if (users[email].password !== password) {
+                showError('Incorrect password. Please try again.');
+                return;
+            }
+
+            // Login successful - save current session
+            localStorage.setItem('currentUser', email);
+            localStorage.setItem('currentOrganization', users[email].organizationId);
+
+            // Show success and redirect
+            showSuccess('Login successful! Redirecting...');
+            
+            setTimeout(() => {
+                window.location.href = 'index.html';
+            }, 1000);
         }
 
-        async function handleSignup(event) {
+        function handleSignup(event) {
             event.preventDefault();
             hideMessages();
-            setLoading(true);
             
             const studioName = document.getElementById('signup-studio').value.trim();
-            const fullName = document.getElementById('signup-name').value.trim();
             const email = document.getElementById('signup-email').value.trim();
             const password = document.getElementById('signup-password').value;
             const confirm = document.getElementById('signup-confirm').value;
 
-            // Validation
+            // Validate studio name
             if (studioName.length < 2) {
                 showError('Studio name must be at least 2 characters.');
-                setLoading(false);
                 return;
             }
 
-            if (fullName.length < 2) {
-                showError('Please enter your full name.');
-                setLoading(false);
-                return;
-            }
-
+            // Validate passwords match
             if (password !== confirm) {
                 showError('Passwords do not match. Please try again.');
-                setLoading(false);
                 return;
             }
 
+            // Validate password length
             if (password.length < 6) {
                 showError('Password must be at least 6 characters.');
-                setLoading(false);
                 return;
             }
 
-            try {
-                // Create user in Firebase Auth
-                const userCredential = await auth.createUserWithEmailAndPassword(email, password);
-                const user = userCredential.user;
+            // Get existing users
+            const users = JSON.parse(localStorage.getItem('studioFlowUsers') || '{}');
 
-                // Update display name
-                await user.updateProfile({ displayName: fullName });
-
-                // Create organization document
-                const orgRef = await db.collection('organizations').add({
-                    name: studioName,
-                    ownerId: user.uid,
-                    createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-                    settings: {
-                        sessionTypes: ['Private', 'Duet', 'Trio']
-                    }
-                });
-
-                // Create user document
-                await db.collection('users').doc(user.uid).set({
-                    email: email,
-                    fullName: fullName,
-                    organizationId: orgRef.id,
-                    role: 'owner',
-                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
-                });
-
-                showSuccess('Account created successfully! Redirecting to dashboard...');
-                
-                setTimeout(() => {
-                    window.location.href = 'index.html';
-                }, 1500);
-
-            } catch (error) {
-                console.error('Signup error:', error);
-                
-                switch (error.code) {
-                    case 'auth/email-already-in-use':
-                        showError('An account with this email already exists. Please login instead.');
-                        break;
-                    case 'auth/invalid-email':
-                        showError('Invalid email address.');
-                        break;
-                    case 'auth/weak-password':
-                        showError('Password is too weak. Please use at least 6 characters.');
-                        break;
-                    default:
-                        showError('Signup failed: ' + error.message);
-                }
-                setLoading(false);
+            // Check if email already exists
+            if (users[email]) {
+                showError('An account with this email already exists. Please login instead.');
+                return;
             }
+
+            // Create organization ID
+            const organizationId = 'org_' + Date.now() + '_' + Math.random().toString(36).substring(7);
+
+            // Create user account
+            users[email] = {
+                studioName: studioName,
+                password: password,
+                organizationId: organizationId,
+                createdAt: new Date().toISOString()
+            };
+
+            // Save users
+            localStorage.setItem('studioFlowUsers', JSON.stringify(users));
+
+            // Create default settings for this organization
+            const orgSettings = {
+                studioName: studioName,
+                sessionTypes: [
+                    { name: 'Private', id: 1 },
+                    { name: 'Duet', id: 2 },
+                    { name: 'Trio', id: 3 }
+                ]
+            };
+            localStorage.setItem(`settings_${organizationId}`, JSON.stringify(orgSettings));
+
+            // Auto-login
+            localStorage.setItem('currentUser', email);
+            localStorage.setItem('currentOrganization', organizationId);
+
+            // Show success and redirect
+            showSuccess('Account created successfully! Redirecting to dashboard...');
+            
+            setTimeout(() => {
+                window.location.href = 'index.html';
+            }, 1500);
         }
 
-
+        // Check if already logged in
+        window.addEventListener('DOMContentLoaded', function() {
+            const currentUser = localStorage.getItem('currentUser');
+            const currentOrg = localStorage.getItem('currentOrganization');
+            
+            if (currentUser && currentOrg) {
+                // Already logged in, redirect to dashboard
+                window.location.href = 'index.html';
+            }
+        });
     </script>
 </body>
 </html>
