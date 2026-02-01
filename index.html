@@ -4013,15 +4013,6 @@ ${session.notes ? `Notes: ${session.notes}` : ''}
         // ========================================
         // PAGE INITIALIZATION
         // ========================================
-        
-       window.addEventListener('DOMContentLoaded', function() {
-            const currentUser = localStorage.getItem('currentUser');
-            const currentOrg = localStorage.getItem('currentOrganization');
-    
-            if (!currentUser || !currentOrg) {
-                window.location.href = 'login.html';
-                return;
-            }
 
             const userData = getCurrentUserData();
             if (!userData) {
