@@ -2399,50 +2399,84 @@
         // ========================================
         // AUTH STATE & INITIALIZATION
         // ========================================
-        auth.onAuthStateChanged(async (user) => {
-            if (user) {
-                currentUser = user;
-                try {
-                    const userDoc = await db.collection('users').doc(user.uid).get();
-                    if (userDoc.exists) {
-                        currentUserData = userDoc.data();
-                        organizationId = currentUserData.organizationId;
+        
+        // Set persistence first, then initialize auth listener
+        auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL)
+            .then(() => {
+                console.log('Auth persistence set to LOCAL');
+                initializeAuthListener();
+            })
+            .catch((error) => {
+                console.error('Error setting persistence:', error);
+                // Still try to initialize even if persistence fails
+                initializeAuthListener();
+            });
+
+        function initializeAuthListener() {
+            // Track if this is the initial auth check
+            let isInitialCheck = true;
+            
+            auth.onAuthStateChanged(async (user) => {
+                console.log('Auth state changed:', user ? user.email : 'null', '| Initial check:', isInitialCheck);
+                
+                if (user) {
+                    // User is authenticated - proceed normally
+                    isInitialCheck = false;
+                    currentUser = user;
+                    try {
+                        const userDoc = await db.collection('users').doc(user.uid).get();
+                        if (userDoc.exists) {
+                            currentUserData = userDoc.data();
+                            organizationId = currentUserData.organizationId;
+                            
+                            // Update UI with user info
+                            document.getElementById('userName').textContent = currentUserData.fullName;
+                            document.getElementById('userRole').textContent = currentUserData.role.charAt(0).toUpperCase() + currentUserData.role.slice(1);
+                            
+                            // Load organization data
+                            await loadOrgSettings();
+                            await loadData();
+                            
+                            // Initialize Lucide icons
+                            if (typeof lucide !== 'undefined') {
+                                lucide.createIcons();
+                            }
+                        } else {
+                            console.error('User document not found');
+                            handleLogout();
+                        }
+                    } catch (error) {
+                        console.error('Error loading user data:', error);
+                    }
+                } else {
+                    // No user detected
+                    if (isInitialCheck) {
+                        // FIRST CHECK: Auth might still be loading from IndexedDB
+                        // Wait for persistence to restore the session
+                        console.log('Initial null state - waiting for session restoration...');
                         
-                        // Update UI with user info
-                        document.getElementById('userName').textContent = currentUserData.fullName;
-                        document.getElementById('userRole').textContent = currentUserData.role.charAt(0).toUpperCase() + currentUserData.role.slice(1);
+                        await new Promise(resolve => setTimeout(resolve, 1000));
                         
-                        // Load organization data
-                        await loadOrgSettings();
-                        await loadData();
+                        // Check again after waiting
+                        const restoredUser = auth.currentUser;
+                        isInitialCheck = false;
                         
-                        // Initialize Lucide icons
-                        if (typeof lucide !== 'undefined') {
-                            lucide.createIcons();
+                        if (restoredUser) {
+                            // Session was restored - this will trigger onAuthStateChanged again
+                            console.log('Session restored for:', restoredUser.email);
+                            // The auth state listener will fire again with the user
+                        } else {
+                            // Still no user after waiting - genuinely not logged in
+                            console.log('No session found after waiting - redirecting to login');
+                            window.location.href = 'login.html';
                         }
                     } else {
-                        console.error('User document not found');
-                        handleLogout();
+                        // NOT the first check - user has signed out
+                        console.log('User signed out - redirecting to login');
+                        window.location.href = 'login.html';
                     }
-                } catch (error) {
-                    console.error('Error loading user data:', error);
                 }
-            } else {
-                // Not logged in, redirect to login
-                window.location.href = 'login.html';
-            }
-        });
-
-        async function loadOrgSettings() {
-            try {
-                const orgDoc = await db.collection('organizations').doc(organizationId).get();
-                if (orgDoc.exists) {
-                    const orgData = orgDoc.data();
-                    document.getElementById('mainStudioName').textContent = orgData.name || 'Studio Flow';
-                }
-            } catch (error) {
-                console.error('Error loading org settings:', error);
-            }
+            });
         }
 
         // ========================================
