@@ -4065,65 +4065,6 @@ ${session.notes ? `Notes: ${session.notes}` : ''}
         // USER MANAGEMENT FUNCTIONS
         // ========================================
 
-        function loadOrgUsers() {
-            const orgId = localStorage.getItem('currentOrganization');
-            const orgUsers = JSON.parse(localStorage.getItem(`org_users_${orgId}`) || '{}');
-            return Object.values(orgUsers);
-        }
-
-        function addUserToOrganization(email, fullName, role, password) {
-            const orgId = localStorage.getItem('currentOrganization');
-            const currentUserData = getCurrentUserData();
-    
-            if (!canManageUsers()) {
-                alert('Only owners can add users to the organization.');
-                return false;
-            }
-
-            // Check if email already exists in global users
-            const allUsers = JSON.parse(localStorage.getItem('studioFlowUsers') || '{}');
-            if (allUsers[email]) {
-                alert('A user with this email already exists.');
-                return false;
-            }
-
-    // Create user ID
-        const userId = 'user_' + Date.now() + '_' + Math.random().toString(36).substring(7);
-
-    // Add to global users
-    allUsers[email] = {
-        fullName: fullName,
-        studioName: currentUserData.studioName,
-        password: password,
-        organizationId: orgId,
-        role: role,
-        createdAt: new Date().toISOString(),
-        userId: userId,
-        addedBy: localStorage.getItem('currentUser')
-    };
-    localStorage.setItem('studioFlowUsers', JSON.stringify(allUsers));
-
-    // Add to organization users
-    const orgUsers = JSON.parse(localStorage.getItem(`org_users_${orgId}`) || '{}');
-    orgUsers[email] = {
-        email: email,
-        fullName: fullName,
-        role: role,
-        userId: userId,
-        addedAt: new Date().toISOString(),
-        addedBy: localStorage.getItem('currentUser')
-    };
-    localStorage.setItem(`org_users_${orgId}`, JSON.stringify(orgUsers));
-
-    return true;
-}
-
-function removeUserFromOrganization(email) {
-    if (!canManageUsers()) {
-        alert('Only owners can remove users.');
-        return false;
-    }
-
     const currentUser = localStorage.getItem('currentUser');
     if (email === currentUser) {
         alert('You cannot remove yourself.');
