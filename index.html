@@ -4030,57 +4030,7 @@ ${session.notes ? `Notes: ${session.notes}` : ''}
             }
         }
 
-        // ========================================
-        // ROLE-BASED ACCESS CONTROL FUNCTIONS
-        // ========================================
-
-        function getCurrentUserData() {
-            const currentUser = localStorage.getItem('currentUser');
-            if (!currentUser) return null;
-    
-            const users = JSON.parse(localStorage.getItem('studioFlowUsers') || '{}');
-            return users[currentUser] || null;
-        }
-    
-        function getUserRole() {
-            const userData = getCurrentUserData();
-            return userData ? userData.role : null;
-        }
-
-        function isOwner() {
-            return getUserRole() === 'owner';
-        }
-
-        function isAdmin() {
-            return getUserRole() === 'admin';
-        }
-
-        function isTeacher() {
-            return getUserRole() === 'teacher';
-        }
-
-        function isOwnerOrAdmin() {
-            const role = getUserRole();
-            return role === 'owner' || role === 'admin';
-        }
-
-        function canAccessSettings() {
-            return isOwnerOrAdmin();
-        }
-
-        function canAccessFinancials() {
-            return isOwnerOrAdmin();
-        }
-
-        function canManageUsers() {
-            return isOwner(); // Only owners can manage users
-        }
-
-        function getOrgKey(key) {
-            const orgId = localStorage.getItem('currentOrganization');
-            return `${key}_${orgId}`;
-        }
-
+      
         // ========================================
         // USER MANAGEMENT FUNCTIONS
         // ========================================
