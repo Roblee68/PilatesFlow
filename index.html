@@ -2396,7 +2396,7 @@
         let currentUserData = null;
         let organizationId = null;
 
-        // ========================================
+// ========================================
         // AUTH STATE & INITIALIZATION
         // ========================================
         
@@ -2408,75 +2408,85 @@
             })
             .catch((error) => {
                 console.error('Error setting persistence:', error);
-                // Still try to initialize even if persistence fails
                 initializeAuthListener();
             });
 
         function initializeAuthListener() {
-            // Track if this is the initial auth check
-            let isInitialCheck = true;
+            // Use a promise to wait for auth to be ready
+            let authReady = false;
+            let authChecked = false;
             
-            auth.onAuthStateChanged(async (user) => {
-                console.log('Auth state changed:', user ? user.email : 'null', '| Initial check:', isInitialCheck);
-                
-                if (user) {
-                    // User is authenticated - proceed normally
-                    isInitialCheck = false;
-                    currentUser = user;
-                    try {
-                        const userDoc = await db.collection('users').doc(user.uid).get();
-                        if (userDoc.exists) {
-                            currentUserData = userDoc.data();
-                            organizationId = currentUserData.organizationId;
-                            
-                            // Update UI with user info
-                            document.getElementById('userName').textContent = currentUserData.fullName;
-                            document.getElementById('userRole').textContent = currentUserData.role.charAt(0).toUpperCase() + currentUserData.role.slice(1);
-                            
-                            // Load organization data
-                            await loadOrgSettings();
-                            await loadData();
-                            
-                            // Initialize Lucide icons
-                            if (typeof lucide !== 'undefined') {
-                                lucide.createIcons();
-                            }
-                        } else {
-                            console.error('User document not found');
-                            handleLogout();
-                        }
-                    } catch (error) {
-                        console.error('Error loading user data:', error);
-                    }
-                } else {
-                    // No user detected
-                    if (isInitialCheck) {
-                        // FIRST CHECK: Auth might still be loading from IndexedDB
-                        // Wait for persistence to restore the session
-                        console.log('Initial null state - waiting for session restoration...');
-                        
-                        await new Promise(resolve => setTimeout(resolve, 1000));
-                        
-                        // Check again after waiting
-                        const restoredUser = auth.currentUser;
-                        isInitialCheck = false;
-                        
-                        if (restoredUser) {
-                            // Session was restored - this will trigger onAuthStateChanged again
-                            console.log('Session restored for:', restoredUser.email);
-                            // The auth state listener will fire again with the user
-                        } else {
-                            // Still no user after waiting - genuinely not logged in
-                            console.log('No session found after waiting - redirecting to login');
-                            window.location.href = 'login.html';
-                        }
+            // Set a timeout - if no auth state after 2 seconds, check currentUser directly
+            const authTimeout = setTimeout(() => {
+                if (!authChecked) {
+                    console.log('Auth timeout reached, checking currentUser directly...');
+                    authChecked = true;
+                    const user = auth.currentUser;
+                    if (user) {
+                        console.log('Found user via currentUser:', user.email);
+                        loadUserAndInitialize(user);
                     } else {
-                        // NOT the first check - user has signed out
-                        console.log('User signed out - redirecting to login');
+                        console.log('No user found after timeout - redirecting to login');
                         window.location.href = 'login.html';
                     }
                 }
+            }, 2000);
+            
+            auth.onAuthStateChanged(async (user) => {
+                // Clear the timeout since we got a response
+                if (!authChecked) {
+                    clearTimeout(authTimeout);
+                }
+                
+                console.log('Auth state changed:', user ? user.email : 'null', '| authChecked:', authChecked);
+                
+                // If we already handled auth via timeout, ignore this callback
+                if (authChecked && !user) {
+                    return;
+                }
+                
+                authChecked = true;
+                
+                if (user) {
+                    // User is authenticated
+                    await loadUserAndInitialize(user);
+                } else {
+                    // No user - redirect to login
+                    console.log('No user in onAuthStateChanged - redirecting to login');
+                    window.location.href = 'login.html';
+                }
             });
+        }
+        
+        async function loadUserAndInitialize(user) {
+            currentUser = user;
+            try {
+                const userDoc = await db.collection('users').doc(user.uid).get();
+                if (userDoc.exists) {
+                    currentUserData = userDoc.data();
+                    organizationId = currentUserData.organizationId;
+                    
+                    // Update UI with user info
+                    document.getElementById('userName').textContent = currentUserData.fullName;
+                    document.getElementById('userRole').textContent = currentUserData.role.charAt(0).toUpperCase() + currentUserData.role.slice(1);
+                    
+                    // Load organization data
+                    await loadOrgSettings();
+                    await loadData();
+                    
+                    // Initialize Lucide icons
+                    if (typeof lucide !== 'undefined') {
+                        lucide.createIcons();
+                    }
+                    
+                    console.log('Dashboard loaded successfully for:', user.email);
+                } else {
+                    console.error('User document not found');
+                    handleLogout();
+                }
+            } catch (error) {
+                console.error('Error loading user data:', error);
+            }
         }
 
         // ========================================
