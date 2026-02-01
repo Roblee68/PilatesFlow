@@ -402,9 +402,19 @@
             });
         }
 
+// ========================================
+        // FIREBASE AUTH FUNCTIONS  
         // ========================================
-        // FIREBASE AUTH FUNCTIONS
-        // ========================================
+        
+        // SET PERSISTENCE AT PAGE LOAD
+        auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL)
+            .then(() => {
+                console.log('Login page: Auth persistence set to LOCAL');
+            })
+            .catch((error) => {
+                console.error('Error setting persistence:', error);
+            });
+        
         async function handleLogin(event) {
             event.preventDefault();
             hideMessages();
@@ -414,9 +424,15 @@
             const password = document.getElementById('login-password').value;
 
             try {
+                // Ensure persistence is set before signing in
+                await auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
+                
                 // Sign in with Firebase Auth
                 const userCredential = await auth.signInWithEmailAndPassword(email, password);
                 const user = userCredential.user;
+                
+                console.log('Login successful, user:', user.email);
+                console.log('Auth currentUser after login:', auth.currentUser?.email);
 
                 // Get user data from Firestore
                 const userDoc = await db.collection('users').doc(user.uid).get();
@@ -432,9 +448,10 @@
                 
                 showSuccess(`Login successful as ${roleDisplay}! Redirecting...`);
                 
+                // Small delay to ensure auth state is fully persisted
                 setTimeout(() => {
                     window.location.href = 'index.html';
-                }, 1000);
+                }, 1500);
 
             } catch (error) {
                 console.error('Login error:', error);
@@ -497,6 +514,9 @@
             }
 
             try {
+                // Ensure persistence is set before creating user
+                await auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
+                
                 // Create user in Firebase Auth
                 const userCredential = await auth.createUserWithEmailAndPassword(email, password);
                 const user = userCredential.user;
