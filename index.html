@@ -4035,6 +4035,11 @@ ${session.notes ? `Notes: ${session.notes}` : ''}
         // USER MANAGEMENT FUNCTIONS
         // ========================================
 
+function removeUserFromOrganization(email) {
+    if (!canManageUsers()) {
+        alert('Only owners can remove users.');
+        return false;
+    }
     const localUser = localStorage.getItem('currentUser');
     if (email === localUser) {
         alert('You cannot remove yourself.');
