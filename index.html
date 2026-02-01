@@ -3229,7 +3229,7 @@ ${session.notes ? `Notes: ${session.notes}` : ''}
         // ========================================
         
         function renderClients() {
-            const container = document.getElementById('clientsList');
+            const container = document.getElementById('clientList');
             if (!container) return;
             
             if (clients.length === 0) {
@@ -3311,7 +3311,7 @@ ${session.notes ? `Notes: ${session.notes}` : ''}
         // ========================================
         
         function renderTeachers() {
-            const container = document.getElementById('teachersList');
+            const container = document.getElementById('teacherList');
             if (!container) return;
             
             if (teachers.length === 0) {
@@ -3690,7 +3690,7 @@ ${session.notes ? `Notes: ${session.notes}` : ''}
         }
 
         function renderTeachersList() {
-            const container = document.getElementById('teachersList');
+            const container = document.getElementById('teacherList');
             if (!container) return;
             
             if (teachers.length === 0) {
