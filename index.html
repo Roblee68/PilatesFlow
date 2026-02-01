@@ -3250,33 +3250,43 @@ ${session.notes ? `Notes: ${session.notes}` : ''}
             `).join('');
         }
 
-        function addClient(event) {
+        async function addClient(event) {
             event.preventDefault();
             
-            const name = document.getElementById('clientName').value.trim();
-            const email = document.getElementById('clientEmail').value.trim();
-            const phone = document.getElementById('clientPhone').value.trim();
+            const name = document.getElementById('name').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const phone = document.getElementById('phone').value.trim();
+            const ratePrivate = document.getElementById('ratePrivate').value;
+            const rateDuet = document.getElementById('rateDuet').value;
+            const rateTrio = document.getElementById('rateTrio').value;
             
             if (!name) {
                 alert('Please enter a client name');
                 return;
             }
             
-            const client = {
-                id: Date.now(),
+            const clientData = {
                 name: name,
                 email: email,
                 phone: phone,
-                createdAt: new Date().toISOString()
+                rates: {
+                    private: parseFloat(ratePrivate) || 0,
+                    duet: parseFloat(rateDuet) || 0,
+                    trio: parseFloat(rateTrio) || 0
+                }
             };
             
-            clients.push(client);
-            saveData();
-            renderClients();
-            
-            document.getElementById('clientForm').reset();
-            alert('Client added successfully!');
+            try {
+                await saveClient(clientData);
+                await loadData();
+                document.getElementById('clientForm').reset();
+                alert('Client added successfully!');
+            } catch (error) {
+                console.error('Error adding client:', error);
+                alert('Error adding client: ' + error.message);
+            }
         }
+        
 
         function editClient(index) {
             const client = clients[index];
