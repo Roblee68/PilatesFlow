@@ -4011,54 +4011,6 @@ ${session.notes ? `Notes: ${session.notes}` : ''}
         }
 
         // ========================================
-        // PAGE INITIALIZATION
-        // ========================================
-
-            const userData = getCurrentUserData();
-            if (!userData) {
-                // User data not found, force logout
-                localStorage.removeItem('currentUser');
-                localStorage.removeItem('currentOrganization');
-                window.location.href = 'login.html';
-                return;
-            }
-
-            // Display user info
-            const userNameEl = document.getElementById('userName');
-            const userRoleEl = document.getElementById('userRole');
-            if (userNameEl) userNameEl.textContent = userData.fullName || 'User';
-            if (userRoleEl) {
-                const roleDisplay = userData.role.charAt(0).toUpperCase() + userData.role.slice(1);
-                userRoleEl.textContent = roleDisplay;
-            }
-
-            // Set studio name
-            document.getElementById('mainStudioName').textContent = userData.studioName || 'Studio Flow';
-
-            // Apply role-based UI restrictions
-            const role = userData.role;
-    
-            // Hide tabs based on role
-            if (role === 'teacher') {
-                // Teachers can't see Income or Settings tabs
-                const incomeTab = document.getElementById('incomeTab');
-                const settingsTab = document.getElementById('settingsTab');
-                if (incomeTab) incomeTab.style.display = 'none';
-                if (settingsTab) settingsTab.style.display = 'none';
-            }
-
-            // Load settings logo if exists
-            const settings = JSON.parse(localStorage.getItem(getOrgKey('settings')) || '{}');
-            if (settings.logo) {
-                updateLogoDisplay(settings.logo);
-            }
-
-            // Load all data
-            loadData();
-            checkIntegrationStatus();
-     
-        });    
-        // ========================================
         // ROLE-BASED ACCESS CONTROL FUNCTIONS
         // ========================================
 
