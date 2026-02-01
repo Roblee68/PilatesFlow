@@ -3560,7 +3560,7 @@ ${session.notes ? `Notes: ${session.notes}` : ''}
             }
             
             const users = JSON.parse(localStorage.getItem('studioFlowUsers') || '{}');
-            const currentUser = localStorage.getItem('currentUser');
+            const localUser = localStorage.getItem('currentUser');
             if (users[currentUser]) {
                 users[currentUser].studioName = studioName;
                 localStorage.setItem('studioFlowUsers', JSON.stringify(users));
@@ -4035,8 +4035,8 @@ ${session.notes ? `Notes: ${session.notes}` : ''}
         // USER MANAGEMENT FUNCTIONS
         // ========================================
 
-    const currentUser = localStorage.getItem('currentUser');
-    if (email === currentUser) {
+    const localUser = localStorage.getItem('currentUser');
+    if (email === localUser) {
         alert('You cannot remove yourself.');
         return false;
     }
@@ -4066,8 +4066,8 @@ function updateUserRole(email, newRole) {
         return false;
     }
 
-    const currentUser = localStorage.getItem('currentUser');
-    if (email === currentUser) {
+    const localUser = localStorage.getItem('currentUser');
+    if (email === localUser) {
         alert('You cannot change your own role.');
         return false;
     }
@@ -4101,7 +4101,7 @@ function renderUserManagement() {
     }
 
     const users = loadOrgUsers();
-    const currentUser = localStorage.getItem('currentUser');
+    const localUser = localStorage.getItem('currentUser');
 
     let html = `
         <div class="settings-section">
