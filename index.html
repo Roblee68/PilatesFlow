@@ -2372,7 +2372,7 @@
             </div>
         </div>
 
-    <script>
+     <script>
 
         // ========================================
         // FIREBASE CONFIGURATION
@@ -2390,77 +2390,49 @@
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
         const db = firebase.firestore();
-        auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
 
         // Current user data
         let currentUser = null;
         let currentUserData = null;
         let organizationId = null;
 
-// ========================================
-        // AUTH STATE & INITIALIZATION
+        // ========================================
+        // AUTH - SIMPLE FIX: WAIT BEFORE CHECKING
         // ========================================
         
-        // Set persistence first, then initialize auth listener
-        auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL)
-            .then(() => {
-                console.log('Auth persistence set to LOCAL');
-                initializeAuthListener();
-            })
-            .catch((error) => {
-                console.error('Error setting persistence:', error);
-                initializeAuthListener();
-            });
-
-        function initializeAuthListener() {
-            // Use a promise to wait for auth to be ready
-            let authReady = false;
-            let authChecked = false;
+        // Don't do anything until page fully loads
+        window.addEventListener('DOMContentLoaded', async () => {
+            console.log('Page loaded, waiting for Firebase auth...');
             
-            // Set a timeout - if no auth state after 2 seconds, check currentUser directly
-            const authTimeout = setTimeout(() => {
-                if (!authChecked) {
-                    console.log('Auth timeout reached, checking currentUser directly...');
-                    authChecked = true;
-                    const user = auth.currentUser;
-                    if (user) {
-                        console.log('Found user via currentUser:', user.email);
-                        loadUserAndInitialize(user);
-                    } else {
-                        console.log('No user found after timeout - redirecting to login');
-                        window.location.href = 'login.html';
-                    }
-                }
-            }, 2000);
+            // Give Firebase 2 seconds to restore the session
+            await new Promise(resolve => setTimeout(resolve, 2000));
             
-            auth.onAuthStateChanged(async (user) => {
-                // Clear the timeout since we got a response
-                if (!authChecked) {
-                    clearTimeout(authTimeout);
-                }
-                
-                console.log('Auth state changed:', user ? user.email : 'null', '| authChecked:', authChecked);
-                
-                // If we already handled auth via timeout, ignore this callback
-                if (authChecked && !user) {
-                    return;
-                }
-                
-                authChecked = true;
-                
-                if (user) {
-                    // User is authenticated
-                    await loadUserAndInitialize(user);
-                } else {
-                    // No user - redirect to login
-                    console.log('No user in onAuthStateChanged - redirecting to login');
+            // Now check if user exists
+            const user = auth.currentUser;
+            console.log('After 2s wait, currentUser is:', user ? user.email : 'NULL');
+            
+            if (user) {
+                // User is logged in!
+                await loadUserAndInitialize(user);
+            } else {
+                // No user after waiting - redirect to login
+                console.log('No user found - redirecting to login');
+                window.location.href = 'login.html';
+            }
+            
+            // Set up listener for future sign-outs only
+            auth.onAuthStateChanged((u) => {
+                if (!u && currentUser) {
+                    console.log('User signed out');
                     window.location.href = 'login.html';
                 }
             });
-        }
+        });
         
         async function loadUserAndInitialize(user) {
             currentUser = user;
+            console.log('Loading data for user:', user.email);
+            
             try {
                 const userDoc = await db.collection('users').doc(user.uid).get();
                 if (userDoc.exists) {
@@ -2480,7 +2452,7 @@
                         lucide.createIcons();
                     }
                     
-                    console.log('Dashboard loaded successfully for:', user.email);
+                    console.log('SUCCESS! Dashboard loaded for:', user.email);
                 } else {
                     console.error('User document not found');
                     handleLogout();
@@ -2489,6 +2461,20 @@
                 console.error('Error loading user data:', error);
             }
         }
+
+        async function loadOrgSettings() {
+            try {
+                const orgDoc = await db.collection('organizations').doc(organizationId).get();
+                if (orgDoc.exists) {
+                    const orgData = orgDoc.data();
+                    document.getElementById('mainStudioName').textContent = orgData.name || 'Studio Flow';
+                }
+            } catch (error) {
+                console.error('Error loading org settings:', error);
+            }
+        }
+
+
 
         // ========================================
         // UTILITY FUNCTIONS
