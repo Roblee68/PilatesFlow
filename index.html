@@ -2500,6 +2500,26 @@
             return currentUserData;
         }
 
+        function getOrgKey(key) {
+            return `${key}_${organizationId}`;
+        }
+
+        function isOwner() {
+            return currentUserData && currentUserData.role === 'owner';
+        }
+
+        function isAdmin() {
+            return currentUserData && currentUserData.role === 'admin';
+        }
+
+        function isTeacher() {
+            return currentUserData && currentUserData.role === 'teacher';
+        }
+
+        function canAccessFinancials() {
+            return isOwnerOrAdmin();
+        }
+         
         // ========================================
         // DATA STORAGE (FIRESTORE)
         // ========================================
