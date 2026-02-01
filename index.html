@@ -1892,7 +1892,7 @@
             <div class="main-grid">
                 <div class="card form-card">
                     <h2><span class="section-icon"></span><span id="form-title">Add New Client</span></h2>
-                    <form id="clientForm">
+                    <form id="clientForm" onsubmit="addClient(event)">
                         <div class="form-group">
                             <label for="name">Client Name</label>
                             <input type="text" id="name" required placeholder="First & Last Name">
@@ -1969,7 +1969,7 @@
             <div class="main-grid">
                 <div class="card form-card">
                     <h2><span class="section-icon"></span><span id="teacher-form-title">Add Teacher</span></h2>
-                    <form id="teacherForm">
+                    <<form id="teacherForm" onsubmit="addTeacher(event)">
                         <div class="form-group">
                             <label for="teacherName">Teacher Name</label>
                             <input type="text" id="teacherName" required placeholder="Full Name">
