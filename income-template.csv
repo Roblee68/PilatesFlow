@@ -1,0 +1,13 @@
+month,year,subtotal,tax,total,type,notes
+01,2024,4000.00,520.00,4520.00,total,January 2024 total income
+02,2024,3800.00,494.00,4294.00,total,February 2024 total income
+03,2024,4250.00,552.50,4802.50,total,March 2024 total income
+04,2024,4100.00,533.00,4633.00,total,April 2024 total income
+05,2024,3950.00,513.50,4463.50,total,May 2024 total income
+06,2024,4300.00,559.00,4859.00,total,June 2024 total income
+07,2024,3700.00,481.00,4181.00,total,July - summer slowdown
+08,2024,3500.00,455.00,3955.00,total,August - vacation month
+09,2024,4400.00,572.00,4972.00,total,September - back to regular schedule
+10,2024,4550.00,591.50,5141.50,total,October 2024 total income
+11,2024,4200.00,546.00,4746.00,total,November 2024 total income
+12,2024,3900.00,507.00,4407.00,total,December - holiday schedule
