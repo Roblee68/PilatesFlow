@@ -1,0 +1,823 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MyoMesh — Pricing &amp; Billing Policy</title>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --forest: #1E3A34;
+            --sage: #3D8B7A;
+            --sage-light: #4FA08D;
+            --coral: #FF6B4A;
+            --coral-light: #FF8F75;
+            --amber: #FFB347;
+            --peach: #FFAD85;
+            --cream: #FFFBF7;
+            --warm-light: #FFF5ED;
+            --text: #2D2926;
+            --text-light: #6B635B;
+            --border: #E8DDD4;
+            --card: #FFFFFF;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--cream);
+            color: var(--text);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* ── Ambient background ── */
+        body::before {
+            content: '';
+            position: fixed;
+            top: -200px; right: -150px;
+            width: 700px; height: 700px;
+            background: radial-gradient(circle, rgba(255,107,74,.07) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 0;
+        }
+        body::after {
+            content: '';
+            position: fixed;
+            bottom: -150px; left: -100px;
+            width: 550px; height: 550px;
+            background: radial-gradient(circle, rgba(61,139,122,.06) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* ── Back link ── */
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--sage);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 600;
+            padding: 28px 24px 0;
+            max-width: 860px;
+            margin: 0 auto;
+            width: 100%;
+            transition: color .2s;
+            position: relative;
+            z-index: 1;
+        }
+        .back-link:hover { color: var(--forest); }
+
+        /* ── Hero ── */
+        .hero {
+            text-align: center;
+            padding: 48px 24px 40px;
+            position: relative;
+            z-index: 1;
+        }
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: linear-gradient(135deg, var(--forest), var(--sage));
+            color: #fff;
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: .4px;
+            padding: 8px 20px;
+            border-radius: 100px;
+            margin-bottom: 24px;
+            animation: fadeSlideUp .6s ease both;
+        }
+        .hero h1 {
+            font-family: 'Fraunces', serif;
+            font-size: clamp(32px, 4.5vw, 48px);
+            font-weight: 600;
+            color: var(--forest);
+            line-height: 1.15;
+            letter-spacing: -.02em;
+            margin-bottom: 14px;
+            animation: fadeSlideUp .6s .1s ease both;
+        }
+        .hero h1 span {
+            background: linear-gradient(135deg, var(--coral), var(--amber));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .hero p {
+            font-size: 17px;
+            color: var(--text-light);
+            max-width: 520px;
+            margin: 0 auto;
+            line-height: 1.6;
+            animation: fadeSlideUp .6s .2s ease both;
+        }
+
+        /* ── Main content ── */
+        .policy-wrap {
+            max-width: 860px;
+            margin: 0 auto;
+            padding: 0 24px 80px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* ── Table of contents ── */
+        .toc {
+            background: var(--card);
+            border: 1.5px solid var(--border);
+            border-radius: 18px;
+            padding: 28px 32px;
+            margin-bottom: 40px;
+            animation: fadeSlideUp .5s .25s ease both;
+        }
+        .toc-title {
+            font-family: 'Fraunces', serif;
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--forest);
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .toc-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 8px 24px;
+        }
+        .toc-grid a {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text);
+            text-decoration: none;
+            font-size: 14px;
+            padding: 6px 0;
+            transition: color .2s;
+        }
+        .toc-grid a:hover { color: var(--coral); }
+        .toc-grid a .toc-num {
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--sage);
+            background: rgba(61,139,122,.08);
+            width: 24px; height: 24px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        /* ── Effective date ── */
+        .effective-date {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            color: var(--text-light);
+            background: var(--warm-light);
+            padding: 8px 16px;
+            border-radius: 10px;
+            margin-bottom: 36px;
+            animation: fadeSlideUp .5s .3s ease both;
+        }
+
+        /* ── Section ── */
+        .policy-section {
+            margin-bottom: 40px;
+            animation: fadeSlideUp .5s ease both;
+        }
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 20px;
+            padding-bottom: 14px;
+            border-bottom: 2px solid var(--border);
+        }
+        .section-num {
+            width: 40px; height: 40px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Fraunces', serif;
+            font-size: 18px;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+        .section-num.sage   { background: rgba(61,139,122,.1);  color: var(--sage);   }
+        .section-num.coral  { background: rgba(255,107,74,.1);  color: var(--coral);  }
+        .section-num.forest { background: rgba(30,58,52,.08);   color: var(--forest); }
+        .section-num.amber  { background: rgba(255,179,71,.12); color: #D4942D;       }
+
+        .section-header h2 {
+            font-family: 'Fraunces', serif;
+            font-size: 22px;
+            font-weight: 600;
+            color: var(--forest);
+        }
+
+        .policy-text {
+            font-size: 15px;
+            line-height: 1.7;
+            color: var(--text);
+            margin-bottom: 16px;
+        }
+
+        .policy-text strong {
+            font-weight: 600;
+            color: var(--forest);
+        }
+
+        /* ── Info card (callout) ── */
+        .info-card {
+            background: var(--card);
+            border: 1.5px solid var(--border);
+            border-radius: 14px;
+            padding: 22px 24px;
+            margin: 18px 0;
+        }
+        .info-card.sage-accent   { border-left: 4px solid var(--sage);  }
+        .info-card.coral-accent  { border-left: 4px solid var(--coral); }
+        .info-card.amber-accent  { border-left: 4px solid var(--amber); }
+        .info-card.forest-accent { border-left: 4px solid var(--forest);}
+
+        .info-card-title {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--forest);
+            margin-bottom: 8px;
+        }
+        .info-card p {
+            font-size: 14px;
+            line-height: 1.6;
+            color: var(--text-light);
+        }
+
+        /* ── Pricing table ── */
+        .plan-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            background: var(--card);
+            border: 1.5px solid var(--border);
+            border-radius: 14px;
+            overflow: hidden;
+            margin: 18px 0;
+            font-size: 14px;
+        }
+        .plan-table thead {
+            background: var(--forest);
+            color: #fff;
+        }
+        .plan-table th {
+            padding: 14px 18px;
+            font-weight: 600;
+            text-align: left;
+            font-size: 13px;
+            letter-spacing: .3px;
+        }
+        .plan-table td {
+            padding: 14px 18px;
+            border-bottom: 1px solid var(--border);
+            color: var(--text);
+        }
+        .plan-table tr:last-child td { border-bottom: none; }
+        .plan-table tbody tr:hover { background: rgba(61,139,122,.02); }
+        .plan-table .popular-row { background: rgba(61,139,122,.04); }
+        .plan-table .popular-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--sage), var(--sage-light));
+            color: #fff;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: .5px;
+            text-transform: uppercase;
+            padding: 3px 10px;
+            border-radius: 100px;
+            margin-left: 8px;
+            vertical-align: middle;
+        }
+        .plan-table .price-cell {
+            font-family: 'Fraunces', serif;
+            font-weight: 700;
+            font-size: 18px;
+            color: var(--forest);
+        }
+
+        /* ── SMS table ── */
+        .sms-table-wrap {
+            background: linear-gradient(135deg, var(--forest) 0%, #2a5249 50%, var(--sage) 100%);
+            border-radius: 14px;
+            padding: 3px;
+            margin: 18px 0;
+        }
+        .sms-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            background: transparent;
+            color: #fff;
+            font-size: 14px;
+        }
+        .sms-table thead {
+            background: rgba(255,255,255,.1);
+        }
+        .sms-table th {
+            padding: 14px 18px;
+            font-weight: 600;
+            text-align: left;
+            font-size: 13px;
+            letter-spacing: .3px;
+        }
+        .sms-table td {
+            padding: 14px 18px;
+            border-bottom: 1px solid rgba(255,255,255,.1);
+        }
+        .sms-table tr:last-child td { border-bottom: none; }
+        .sms-table tbody tr:hover { background: rgba(255,255,255,.05); }
+        .sms-table .sms-price {
+            font-family: 'Fraunces', serif;
+            font-weight: 700;
+            font-size: 18px;
+        }
+
+        /* ── Timeline / example ── */
+        .timeline {
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+            margin: 18px 0;
+            position: relative;
+        }
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 19px;
+            top: 12px;
+            bottom: 12px;
+            width: 2px;
+            background: var(--border);
+        }
+        .timeline-step {
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+            padding: 10px 0;
+            position: relative;
+        }
+        .timeline-dot {
+            width: 40px; height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            font-size: 12px;
+            font-weight: 700;
+            z-index: 1;
+        }
+        .timeline-dot.sage   { background: rgba(61,139,122,.12);  color: var(--sage);  border: 2px solid var(--sage);  }
+        .timeline-dot.coral  { background: rgba(255,107,74,.1);   color: var(--coral); border: 2px solid var(--coral); }
+        .timeline-dot.amber  { background: rgba(255,179,71,.12);  color: #D4942D;     border: 2px solid var(--amber); }
+        .timeline-dot.forest { background: rgba(30,58,52,.08);    color: var(--forest);border: 2px solid var(--forest);}
+        .timeline-content {
+            padding-top: 8px;
+        }
+        .timeline-content strong {
+            font-size: 14px;
+            color: var(--forest);
+            display: block;
+            margin-bottom: 3px;
+        }
+        .timeline-content span {
+            font-size: 13px;
+            color: var(--text-light);
+            line-height: 1.5;
+        }
+
+        /* ── Footer ── */
+        .policy-footer {
+            text-align: center;
+            padding: 40px 24px 48px;
+            border-top: 1.5px solid var(--border);
+            max-width: 860px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+        .policy-footer p {
+            font-size: 14px;
+            color: var(--text-light);
+            line-height: 1.6;
+            margin-bottom: 6px;
+        }
+        .policy-footer a {
+            color: var(--sage);
+            text-decoration: none;
+            font-weight: 600;
+        }
+        .policy-footer a:hover { color: var(--coral); }
+
+        /* ── Animations ── */
+        @keyframes fadeSlideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ── Responsive ── */
+        @media (max-width: 600px) {
+            .hero { padding: 36px 20px 28px; }
+            .policy-wrap { padding: 0 16px 60px; }
+            .toc { padding: 22px 20px; }
+            .toc-grid { grid-template-columns: 1fr; }
+            .plan-table, .sms-table { font-size: 13px; }
+            .plan-table th, .plan-table td,
+            .sms-table th, .sms-table td { padding: 10px 12px; }
+            .plan-table .price-cell, .sms-table .sms-price { font-size: 16px; }
+            .info-card { padding: 18px 18px; }
+            .section-header h2 { font-size: 19px; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- ═══════════ BACK LINK ═══════════ -->
+<div style="max-width:860px;margin:0 auto;">
+    <a href="pricing.html" class="back-link">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>
+        Back to Pricing
+    </a>
+</div>
+
+<!-- ═══════════ HERO ═══════════ -->
+<section class="hero">
+    <div class="hero-badge">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        Pricing &amp; Billing Policy
+    </div>
+    <h1>Transparent billing,<br><span>no surprises</span></h1>
+    <p>Everything you need to know about our plans, billing cycles, upgrades, downgrades, cancellations, and refunds — all in one place.</p>
+</section>
+
+<!-- ═══════════ MAIN CONTENT ═══════════ -->
+<div class="policy-wrap">
+
+    <!-- ── Effective date ── -->
+    <div class="effective-date">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+        Last updated: February 12, 2026
+    </div>
+
+    <!-- ── Table of contents ── -->
+    <nav class="toc">
+        <div class="toc-title">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h7"/></svg>
+            In This Policy
+        </div>
+        <div class="toc-grid">
+            <a href="#plans"><span class="toc-num">1</span>Subscription Plans</a>
+            <a href="#sms"><span class="toc-num">2</span>SMS Add-On Packs</a>
+            <a href="#trial"><span class="toc-num">3</span>Free Trial</a>
+            <a href="#billing"><span class="toc-num">4</span>Billing Cycle &amp; Payment</a>
+            <a href="#upgrades"><span class="toc-num">5</span>Upgrading Your Plan</a>
+            <a href="#downgrades"><span class="toc-num">6</span>Downgrading Your Plan</a>
+            <a href="#staff"><span class="toc-num">7</span>Staff Limits</a>
+            <a href="#cancellation"><span class="toc-num">8</span>Cancellation Policy</a>
+            <a href="#refunds"><span class="toc-num">9</span>Refund Policy</a>
+            <a href="#currency"><span class="toc-num">10</span>Currency &amp; Tax</a>
+            <a href="#changes"><span class="toc-num">11</span>Policy Changes</a>
+            <a href="#contact"><span class="toc-num">12</span>Contact &amp; Support</a>
+        </div>
+    </nav>
+
+    <!-- ═══ 1. SUBSCRIPTION PLANS ═══ -->
+    <section class="policy-section" id="plans">
+        <div class="section-header">
+            <div class="section-num sage">1</div>
+            <h2>Subscription Plans</h2>
+        </div>
+        <p class="policy-text">MyoMesh offers three monthly subscription tiers. Every plan includes the full suite of features — scheduling, payments, SOAP notes, analytics, integrations, and more. Plans differ only by the number of staff members allowed (including the account owner).</p>
+
+        <table class="plan-table">
+            <thead>
+                <tr>
+                    <th>Plan</th>
+                    <th>Staff Limit</th>
+                    <th>Monthly Price (CAD)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>MyoGrow</strong></td>
+                    <td>Up to 3 staff</td>
+                    <td class="price-cell">$55</td>
+                </tr>
+                <tr class="popular-row">
+                    <td><strong>MyoBuild</strong> <span class="popular-badge">Most Popular</span></td>
+                    <td>Up to 8 staff</td>
+                    <td class="price-cell">$85</td>
+                </tr>
+                <tr>
+                    <td><strong>MyoPro</strong></td>
+                    <td>Up to 16 staff</td>
+                    <td class="price-cell">$115</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="info-card sage-accent">
+            <div class="info-card-title">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--sage)" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><circle cx="12" cy="8" r="0.5" fill="currentColor"/></svg>
+                All Features Included
+            </div>
+            <p>There are no feature gates between plans. Every MyoMesh subscriber gets access to online booking, Stripe &amp; PayPal payments, QuickBooks sync, Google &amp; Microsoft Calendar integration, custom session pricing, staff expense tracking, SOAP notes, injury tracking, analytics, double-booking protection, and email/calendar reminders.</p>
+        </div>
+    </section>
+
+    <!-- ═══ 2. SMS ADD-ON PACKS ═══ -->
+    <section class="policy-section" id="sms">
+        <div class="section-header">
+            <div class="section-num coral">2</div>
+            <h2>SMS Add-On Packs</h2>
+        </div>
+        <p class="policy-text">SMS appointment reminders and notifications are available as an optional add-on to any plan. Each pack provides a monthly allotment of outbound text messages. Unused messages do not roll over to the following month.</p>
+
+        <div class="sms-table-wrap">
+            <table class="sms-table">
+                <thead>
+                    <tr>
+                        <th>Pack</th>
+                        <th>Monthly Messages</th>
+                        <th>Price (CAD)</th>
+                        <th>Per Message</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Starter</strong></td>
+                        <td>500 SMS</td>
+                        <td class="sms-price">$15</td>
+                        <td>$0.030</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Standard</strong></td>
+                        <td>1,500 SMS</td>
+                        <td class="sms-price">$40</td>
+                        <td>$0.027</td>
+                    </tr>
+                    <tr>
+                        <td><strong>High Volume</strong></td>
+                        <td>5,000 SMS</td>
+                        <td class="sms-price">$100</td>
+                        <td>$0.020</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="info-card amber-accent">
+            <div class="info-card-title">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--amber)" stroke-width="2.5" stroke-linecap="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                SMS Pack Changes
+            </div>
+            <p><strong>Adding or upgrading</strong> an SMS pack takes effect immediately and a prorated charge applies for the remainder of the current billing cycle. <strong>Removing or downgrading</strong> an SMS pack is scheduled to take effect on your next billing date — you'll continue to have access to your current pack for the rest of the month.</p>
+        </div>
+    </section>
+
+    <!-- ═══ 3. FREE TRIAL ═══ -->
+    <section class="policy-section" id="trial">
+        <div class="section-header">
+            <div class="section-num amber">3</div>
+            <h2>Free Trial</h2>
+        </div>
+        <p class="policy-text">Every new MyoMesh account starts with a <strong>14-day free trial</strong> on any plan. You get full access to all features during your trial — no credit card required to start.</p>
+        <p class="policy-text">At the end of your trial, your subscription will convert to a paid plan at the monthly rate shown above. If you choose not to continue, you can cancel at any time during the trial with no charge.</p>
+
+        <div class="info-card sage-accent">
+            <div class="info-card-title">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--sage)" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+                Trial Cancellation
+            </div>
+            <p>If you cancel during your trial, your account will remain accessible until the trial end date. No charge will be made. You'll have 30 days after your trial ends to download your data.</p>
+        </div>
+    </section>
+
+    <!-- ═══ 4. BILLING CYCLE & PAYMENT ═══ -->
+    <section class="policy-section" id="billing">
+        <div class="section-header">
+            <div class="section-num forest">4</div>
+            <h2>Billing Cycle &amp; Payment</h2>
+        </div>
+        <p class="policy-text">MyoMesh subscriptions are billed <strong>monthly on the 1st of each month</strong>. Your monthly charge includes your plan fee plus the cost of any active SMS add-on pack.</p>
+        <p class="policy-text">We accept payment via <strong>Stripe</strong> (credit and debit cards). You can view your billing details, update your payment method, and review your payment history from the <strong>Subscription</strong> section in your MyoMesh settings.</p>
+
+        <div class="info-card coral-accent">
+            <div class="info-card-title">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--coral)" stroke-width="2.5" stroke-linecap="round"><rect x="1" y="4" width="22" height="16" rx="2"/><path d="M1 10h22"/></svg>
+                Past Due Payments
+            </div>
+            <p>If a payment fails, your account will be marked as <strong>Past Due</strong>. We'll retry the charge and notify you by email. Please update your payment method promptly to avoid any interruption to your service.</p>
+        </div>
+    </section>
+
+    <!-- ═══ 5. UPGRADING YOUR PLAN ═══ -->
+    <section class="policy-section" id="upgrades">
+        <div class="section-header">
+            <div class="section-num sage">5</div>
+            <h2>Upgrading Your Plan</h2>
+        </div>
+        <p class="policy-text">You can upgrade your plan at any time from your settings. Upgrades take effect <strong>immediately</strong>, giving you instant access to the higher staff limit.</p>
+        <p class="policy-text">When you upgrade mid-cycle, we calculate a <strong>prorated charge</strong> for the remaining days in the current month. This is the price difference between your old and new plan, divided by the days in the month, multiplied by the days remaining. This one-time charge is billed immediately. Starting with your next billing date, you'll be charged the full new monthly rate.</p>
+
+        <div class="info-card sage-accent">
+            <div class="info-card-title">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--sage)" stroke-width="2.5" stroke-linecap="round"><path d="M12 20V10"/><path d="M18 20V4"/><path d="M6 20v-4"/></svg>
+                Example: Mid-Month Upgrade
+            </div>
+            <p>You're on <strong>MyoGrow ($55)</strong> and upgrade to <strong>MyoBuild ($85)</strong> on January 15. The price difference is $30/month. January has 31 days and 16 remain. Your prorated charge today is <strong>$15.48</strong> (= $30 ÷ 31 × 16). On February 1, your regular charge becomes $85/month.</p>
+        </div>
+    </section>
+
+    <!-- ═══ 6. DOWNGRADING YOUR PLAN ═══ -->
+    <section class="policy-section" id="downgrades">
+        <div class="section-header">
+            <div class="section-num coral">6</div>
+            <h2>Downgrading Your Plan</h2>
+        </div>
+        <p class="policy-text">Downgrades are <strong>scheduled for your next billing date</strong>. You'll continue to enjoy the benefits of your current plan for the remainder of the billing cycle, and the lower rate will apply starting on the 1st of the following month. No partial refund is issued for the current month.</p>
+        <p class="policy-text">Before a downgrade can be processed, you must ensure your <strong>active staff count</strong> does not exceed the staff limit of the plan you're moving to. If you currently have more active staff than the lower plan allows, you'll need to pause or remove staff members before the downgrade can proceed.</p>
+
+        <div class="info-card coral-accent">
+            <div class="info-card-title">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--coral)" stroke-width="2.5" stroke-linecap="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/></svg>
+                Staff Count Check
+            </div>
+            <p>For example, if you're on MyoPro (16 staff) and want to downgrade to MyoBuild (8 staff), you must have 8 or fewer active staff members before the downgrade can be confirmed.</p>
+        </div>
+    </section>
+
+    <!-- ═══ 7. STAFF LIMITS ═══ -->
+    <section class="policy-section" id="staff">
+        <div class="section-header">
+            <div class="section-num amber">7</div>
+            <h2>Staff Limits</h2>
+        </div>
+        <p class="policy-text">Each plan includes a maximum number of active staff members (including the account owner). Staff limits are enforced when inviting new team members or reactivating paused accounts.</p>
+        <p class="policy-text"><strong>Paused staff members do not count</strong> toward your active staff limit. If you've reached your plan's limit, you can pause an existing staff member to free up a slot, or upgrade to a higher plan for additional capacity.</p>
+
+        <table class="plan-table">
+            <thead>
+                <tr>
+                    <th>Plan</th>
+                    <th>Active Staff Limit</th>
+                    <th>Need More?</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>MyoGrow</strong></td>
+                    <td>3 staff (incl. owner)</td>
+                    <td>Upgrade to MyoBuild →</td>
+                </tr>
+                <tr class="popular-row">
+                    <td><strong>MyoBuild</strong></td>
+                    <td>8 staff (incl. owner)</td>
+                    <td>Upgrade to MyoPro →</td>
+                </tr>
+                <tr>
+                    <td><strong>MyoPro</strong></td>
+                    <td>16 staff (incl. owner)</td>
+                    <td>Contact us for custom</td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <!-- ═══ 8. CANCELLATION POLICY ═══ -->
+    <section class="policy-section" id="cancellation">
+        <div class="section-header">
+            <div class="section-num forest">8</div>
+            <h2>Cancellation Policy</h2>
+        </div>
+        <p class="policy-text">You can cancel your MyoMesh subscription at any time from your settings. All paid cancellations are subject to a <strong>30-day notice period</strong>.</p>
+        <p class="policy-text">When you cancel a paid subscription, you are required to pay through the end of the <strong>following calendar month</strong>. Your account will remain fully accessible until that date, and you'll have an additional 30 days after access ends to download your data.</p>
+
+        <p class="policy-text" style="font-weight:600;color:var(--forest);margin-bottom:8px;">Example: Cancelling on January 15</p>
+
+        <div class="timeline">
+            <div class="timeline-step">
+                <div class="timeline-dot coral">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M18 6 6 18"/><path d="M6 6l12 12"/></svg>
+                </div>
+                <div class="timeline-content">
+                    <strong>January 15 — Cancellation submitted</strong>
+                    <span>30-day notice period begins. Your service continues normally.</span>
+                </div>
+            </div>
+            <div class="timeline-step">
+                <div class="timeline-dot amber">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><rect x="1" y="4" width="22" height="16" rx="2"/><path d="M1 10h22"/></svg>
+                </div>
+                <div class="timeline-content">
+                    <strong>February 1 — Final payment charged</strong>
+                    <span>Your last monthly charge is processed. Full access continues through the month.</span>
+                </div>
+            </div>
+            <div class="timeline-step">
+                <div class="timeline-dot forest">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="M22 4 12 14.01l-3-3"/></svg>
+                </div>
+                <div class="timeline-content">
+                    <strong>February 28 — Account access ends</strong>
+                    <span>Your subscription is fully cancelled. No further charges will be made.</span>
+                </div>
+            </div>
+            <div class="timeline-step">
+                <div class="timeline-dot sage">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                </div>
+                <div class="timeline-content">
+                    <strong>March 30 — Data download deadline</strong>
+                    <span>You have 30 days after access ends to export your client data, notes, and records.</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="info-card forest-accent">
+            <div class="info-card-title">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--forest)" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><circle cx="12" cy="8" r="0.5" fill="currentColor"/></svg>
+                Trial Accounts
+            </div>
+            <p>If you cancel during your free trial, cancellation is immediate and no charge is made. You'll retain access until your trial end date and have 30 days after that to download your data.</p>
+        </div>
+    </section>
+
+    <!-- ═══ 9. REFUND POLICY ═══ -->
+    <section class="policy-section" id="refunds">
+        <div class="section-header">
+            <div class="section-num sage">9</div>
+            <h2>Refund Policy</h2>
+        </div>
+        <p class="policy-text">Monthly subscription fees are <strong>non-refundable</strong>. Because all plans are billed monthly with no long-term commitment, and every new account begins with a free trial, we do not offer partial or full refunds for subscription charges already processed.</p>
+        <p class="policy-text">If you believe you've been charged in error, or have exceptional circumstances, please reach out to our support team. We'll review your case individually.</p>
+
+        <div class="info-card amber-accent">
+            <div class="info-card-title">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--amber)" stroke-width="2.5" stroke-linecap="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                Prorated Charges
+            </div>
+            <p>Prorated charges from mid-cycle upgrades (plan or SMS) are also non-refundable. When upgrading, you'll see the exact prorated amount before confirming the change.</p>
+        </div>
+    </section>
+
+    <!-- ═══ 10. CURRENCY & TAX ═══ -->
+    <section class="policy-section" id="currency">
+        <div class="section-header">
+            <div class="section-num coral">10</div>
+            <h2>Currency &amp; Tax</h2>
+        </div>
+        <p class="policy-text">Prices shown on our pricing page are in <strong>Canadian Dollars (CAD)</strong> by default. MyoMesh also supports billing in USD, GBP, AUD, NZD, and EUR. Your billing currency is determined by your account settings and cannot be changed after your first payment is processed.</p>
+        <p class="policy-text">All prices are <strong>exclusive of applicable taxes</strong>. Depending on your location, sales tax, VAT, or GST/HST may be added to your invoice. Tax amounts will be clearly shown before payment is processed.</p>
+    </section>
+
+    <!-- ═══ 11. POLICY CHANGES ═══ -->
+    <section class="policy-section" id="changes">
+        <div class="section-header">
+            <div class="section-num forest">11</div>
+            <h2>Policy Changes</h2>
+        </div>
+        <p class="policy-text">We may update this pricing and billing policy from time to time. If we make material changes — such as price adjustments or changes to cancellation terms — we'll notify you by email at least <strong>30 days before</strong> the changes take effect. Continued use of MyoMesh after the effective date constitutes acceptance of the updated policy.</p>
+    </section>
+
+    <!-- ═══ 12. CONTACT ═══ -->
+    <section class="policy-section" id="contact">
+        <div class="section-header">
+            <div class="section-num amber">12</div>
+            <h2>Contact &amp; Support</h2>
+        </div>
+        <p class="policy-text">Questions about your bill, plan, or this policy? We're here to help.</p>
+        <div class="info-card sage-accent">
+            <p><strong>Email:</strong> <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="4d3e383d3d223f390d20342220283e25632e2220">[email&#160;protected]</a></p>
+            <p style="margin-top:6px;"><strong>In-app:</strong> Use the support chat inside your MyoMesh dashboard.</p>
+            <p style="margin-top:6px;">We typically respond within one business day.</p>
+        </div>
+    </section>
+
+</div>
+
+<!-- ═══════════ FOOTER ═══════════ -->
+<div class="policy-footer">
+    <p>© 2026
