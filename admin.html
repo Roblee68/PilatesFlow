@@ -1473,12 +1473,12 @@
 // FIREBASE CONFIG — Replace with your config
 // ========================================
 const firebaseConfig = {
-    apiKey: "YOUR_API_KEY",
-    authDomain: "YOUR_AUTH_DOMAIN",
-    projectId: "YOUR_PROJECT_ID",
-    storageBucket: "YOUR_STORAGE_BUCKET",
-    messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-    appId: "YOUR_APP_ID"
+    apiKey: "AIzaSyD_BGXX9kB8EPKKln6WYrK0QN1abKaufNA",
+    authDomain: "flow-crm-2026rl.firebaseapp.com",
+    projectId: "flow-crm-2026rl",
+    storageBucket: "flow-crm-2026rl.firebasestorage.app",
+    messagingSenderId: "233927450484",
+    appId: "1:233927450484:web:cdd4852347e8450dbbd621"
 };
 
 firebase.initializeApp(firebaseConfig);
@@ -1510,7 +1510,7 @@ let activityLog = [];
 let mfaResolver = null; // For MFA verification flow
 
 // Fallback: bootstrap admin email if Firestore 'platform_admins' is empty
-const BOOTSTRAP_ADMIN = 'admin@myomesh.com';
+const BOOTSTRAP_ADMIN = 'rjlee@outlook.com';
 
 async function checkIfAdmin(email) {
     try {
