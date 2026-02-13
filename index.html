@@ -4497,19 +4497,14 @@
                     </p>
 
                     <!-- Currency -->
+                   
                     <div style="background: var(--warm-light); border: 1px solid var(--border); border-radius: 12px; padding: 16px; margin-bottom: 15px;">
                         <div style="display: flex; align-items: center; gap: 12px;">
-                            <span style="font-size: 20px;">🌍</span>
+                            <span style="font-size: 20px;">🇨🇦</span>
                             <div style="flex: 1;">
                                 <label style="font-weight: 600; font-size: 14px; color: var(--primary);">Currency</label>
                             </div>
-                            <select id="paymentCurrency" onchange="savePaymentCurrency()" style="width: 140px; padding: 8px 12px; font-size: 14px; font-weight: 600;">
-                                <option value="CAD">🇨🇦 CAD</option>
-                                <option value="USD">🇺🇸 USD</option>
-                                <option value="GBP">🇬🇧 GBP</option>
-                                <option value="EUR">🇪🇺 EUR</option>
-                                <option value="AUD">🇦🇺 AUD</option>
-                            </select>
+                            <span style="font-size: 14px; font-weight: 600;">CAD</span>
                         </div>
                     </div>
 
@@ -10511,44 +10506,25 @@ input:focus,select:focus{outline:none;border-color:#3D8B7A;box-shadow:0 0 0 3px 
             window.open(url, '_blank');
         }
 
-        // ========================================
-        // PAYMENT SYSTEM
-        // ========================================
+     // ========================================
+    // PAYMENT SYSTEM
+    // ========================================
+    function getSessionAmount(session) {
+        if (!session.clients || session.clients.length === 0) return 0;
+        const typeKey = getSessionTypeKey(session.type || getSessionTypes()[0]?.name || 'Type 1');
+        let total = 0;
+        session.clients.forEach(clientId => {
+            const client = clients.find(c => c.id === clientId);
+            if (client && client.rates && client.rates[typeKey]) {
+                total += parseFloat(client.rates[typeKey]) || 0;
+            }
+        });
+        return total;
+    }
 
-        function getSessionAmount(session) {
-            if (!session.clients || session.clients.length === 0) return 0;
-            const typeKey = getSessionTypeKey(session.type || getSessionTypes()[0]?.name || 'Type 1');
-            let total = 0;
-            session.clients.forEach(clientId => {
-                const client = clients.find(c => c.id === clientId);
-                if (client && client.rates && client.rates[typeKey]) {
-                    total += parseFloat(client.rates[typeKey]) || 0;
-                }
-            });
-            return total;
-        }
-
-        function getPaymentCurrency() {
-            const settings = JSON.parse(localStorage.getItem(getOrgKey('settings')) || '{}');
-            return settings.paymentCurrency || 'CAD';
-        }
-
-        function getCurrencySymbol(code) {
-            const symbols = { CAD: '$', USD: '$', GBP: '£', EUR: '€', AUD: '$' };
-            return symbols[code] || '$';
-        }
-
-        function formatAmount(amount) {
-            return getCurrencySymbol(getPaymentCurrency()) + amount.toFixed(2);
-        }
-
-        function savePaymentCurrency() {
-            const currency = document.getElementById('paymentCurrency').value;
-            const settings = JSON.parse(localStorage.getItem(getOrgKey('settings')) || '{}');
-            settings.paymentCurrency = currency;
-            localStorage.setItem(getOrgKey('settings'), JSON.stringify(settings));
-        }
-
+    function formatAmount(amount) {
+        return '$' + amount.toFixed(2);
+    }
         // ========================================
         // STRIPE & PAYPAL KEY MANAGEMENT
         // ========================================
@@ -10600,15 +10576,8 @@ input:focus,select:focus{outline:none;border-color:#3D8B7A;box-shadow:0 0 0 3px 
             if (ppScript) ppScript.remove();
             loadPaymentSettings();
         }
-
         function loadPaymentSettings() {
             const settings = JSON.parse(localStorage.getItem(getOrgKey('settings')) || '{}');
-
-            // Load currency
-            const currencyEl = document.getElementById('paymentCurrency');
-            if (currencyEl) {
-                currencyEl.value = settings.paymentCurrency || 'CAD';
-            }
 
             const stripeStatus = document.getElementById('stripeConnectionStatus');
             const stripeInputs = document.getElementById('stripeKeyInputs');
@@ -10663,7 +10632,7 @@ input:focus,select:focus{outline:none;border-color:#3D8B7A;box-shadow:0 0 0 3px 
             const amount = getSessionAmount(session);
             const settings = JSON.parse(localStorage.getItem(getOrgKey('settings')) || '{}');
             const payment = session.payment || {};
-            const sym = getCurrencySymbol(getPaymentCurrency());
+            const sym = '$';
 
             if (payment.status === 'paid') {
                 const methodLabels = { stripe: '💳 Stripe (Card)', paypal: '🅿️ PayPal', cash: '💵 Cash', prepaid: '🎫 Prepaid', invoice: '📄 Invoice / e-Transfer' };
@@ -10738,7 +10707,7 @@ input:focus,select:focus{outline:none;border-color:#3D8B7A;box-shadow:0 0 0 3px 
             const amount = getSessionAmount(session);
             const clientNames = getClientNamesForSession(session);
             const currency = getPaymentCurrency();
-            const sym = getCurrencySymbol(currency);
+            const sym = '$';
             if (amount <= 0) { alert('Cannot charge ' + sym + '0. Set client rates first.'); return; }
 
             const settings = JSON.parse(localStorage.getItem(getOrgKey('settings')) || '{}');
@@ -10817,7 +10786,7 @@ input:focus,select:focus{outline:none;border-color:#3D8B7A;box-shadow:0 0 0 3px 
         async function submitStripePayment() {
             const { stripe, elements, sessionId, amount } = window._stripeCheckout || {};
             if (!stripe || !elements) return;
-            const sym = getCurrencySymbol(getPaymentCurrency());
+            const sym = '$';
 
             const btn = document.getElementById('stripePayBtn');
             const msgEl = document.getElementById('stripePaymentMessage');
@@ -10883,8 +10852,8 @@ input:focus,select:focus{outline:none;border-color:#3D8B7A;box-shadow:0 0 0 3px 
             if (!session) return;
             const amount = getSessionAmount(session);
             const clientNames = getClientNamesForSession(session);
-            const currency = getPaymentCurrency();
-            const sym = getCurrencySymbol(currency);
+            const currency = 'CAD';
+            const sym = '$';
             if (amount <= 0) { alert('Cannot charge ' + sym + '0. Set client rates first.'); return; }
 
             const settings = JSON.parse(localStorage.getItem(getOrgKey('settings')) || '{}');
@@ -10981,7 +10950,7 @@ input:focus,select:focus{outline:none;border-color:#3D8B7A;box-shadow:0 0 0 3px 
             if (!session) return;
             const amount = getSessionAmount(session);
             const clientNames = getClientNamesForSession(session);
-            const sym = getCurrencySymbol(getPaymentCurrency());
+            const sym = '$';
             if (amount <= 0) { alert('Cannot invoice ' + sym + '0. Set client rates first.'); return; }
             if (!confirm(`Send invoice for ${sym}${amount.toFixed(2)}?\n\n${session.type} Session with ${clientNames}\n\nAn invoice will be emailed for payment via e-Transfer.`)) return;
             try {
@@ -10995,7 +10964,7 @@ input:focus,select:focus{outline:none;border-color:#3D8B7A;box-shadow:0 0 0 3px 
             if (!session) return;
             const amount = getSessionAmount(session);
             const clientNames = getClientNamesForSession(session);
-            const sym = getCurrencySymbol(getPaymentCurrency());
+            const sym = '$';
 
             const modal = document.getElementById('paymentCheckoutModal');
             document.getElementById('paymentModalTitle').textContent = '💵 Cash / Prepaid Payment';
@@ -11039,7 +11008,7 @@ input:focus,select:focus{outline:none;border-color:#3D8B7A;box-shadow:0 0 0 3px 
             const session = sessions.find(s => s.id === sessionId);
             if (!session) return;
             const amount = getSessionAmount(session);
-            const sym = getCurrencySymbol(getPaymentCurrency());
+            const sym = '$';
             if (!confirm(`Confirm payment of ${sym}${amount.toFixed(2)} received?`)) return;
             try {
                 await updateSessionPayment(sessionId, { status: 'paid', method: method, amount: amount, paidAt: new Date().toISOString(), receiptSent: true });
